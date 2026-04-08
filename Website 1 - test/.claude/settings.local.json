@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:github.com)",
+      "Bash(curl -s https://api.github.com/repos/DavidHDev/react-bits/git/trees/main?recursive=1)",
+      "Bash(curl -s \"https://raw.githubusercontent.com/DavidHDev/react-bits/main/public/r/DotGrid-JS-CSS.json\")",
+      "Bash(claude mcp:*)",
+      "Read(//usr/local/bin/**)",
+      "Read(//Users/ronkohen/.npm/bin/**)",
+      "Bash(npx claude:*)",
+      "mcp__shadcn__search_items_in_registries",
+      "mcp__shadcn__get_project_registries",
+      "Bash(cp \"/Users/ronkohen/Desktop/Claude/Website/Website 1 - test/components.json\" \"/Users/ronkohen/Desktop/Claude/Website/Website 2 - react/components.json\")",
+      "Bash(cp \"/Users/ronkohen/Desktop/Claude/Website/Website 1 - test/.mcp.json\" \"/Users/ronkohen/Desktop/Claude/Website/Website 2 - react/.mcp.json\")",
+      "Read(//Users/ronkohen/Desktop/Claude/Website/Website 2 - react/**)",
+      "Bash(npx shadcn@latest add @react-bits/Silk-JS-CSS --yes)",
+      "Bash(npx shadcn@latest init --yes)",
+      "WebFetch(domain:reactbits.dev)"
+    ]
+  }
+}
