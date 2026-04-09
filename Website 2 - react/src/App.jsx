@@ -2,8 +2,9 @@ import { useRef } from 'react';
 import AnimatedContent from './components/AnimatedContent/AnimatedContent';
 import VideoPlayer from './components/VideoPlayer/VideoPlayer';
 import VariableProximity from './components/VariableProximity/VariableProximity';
-import Aurora from './components/Aurora/Aurora';
 import ScrollStack, { ScrollStackItem } from './components/ScrollStack/ScrollStack';
+import BorderGlow from './components/BorderGlow/BorderGlow';
+import Aurora from './components/Aurora/Aurora';
 import './App.css';
 
 const projects = [
@@ -69,6 +70,13 @@ export default function App() {
               className="hero-variable"
             />
           </h1>
+          <a href="#work" className="explore-btn">
+            <span>explore projects</span>
+            <svg className="explore-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19" />
+              <polyline points="19 12 12 19 5 12" />
+            </svg>
+          </a>
         </div>
         <div className="hero-scroll">
           <span>Scroll</span>
@@ -94,7 +102,18 @@ export default function App() {
             </div>
           </AnimatedContent>
           <AnimatedContent distance={60} duration={1} delay={0.1}>
-            <VideoPlayer src="/office.mp4" />
+            <BorderGlow
+              backgroundColor="transparent"
+              borderRadius={6}
+              glowRadius={32}
+              glowColor="270 80 75"
+              colors={['#a78bfa', '#818cf8', '#7dd3fc']}
+              fillOpacity={0.15}
+              glowIntensity={1.2}
+              edgeSensitivity={20}
+            >
+              <VideoPlayer src="/office.mp4" />
+            </BorderGlow>
           </AnimatedContent>
           <AnimatedContent distance={30} duration={0.9} delay={0.2}>
             <div className="project-feature-desc">
@@ -140,7 +159,18 @@ export default function App() {
         <div className="project-row centered">
           <AnimatedContent distance={60} duration={1} scale={0.97}>
             <div className="project-portrait">
-              <Placeholder ratio="9:16" index={2} />
+              <BorderGlow
+                backgroundColor="transparent"
+                borderRadius={6}
+                glowRadius={28}
+                glowColor="270 80 75"
+                colors={['#a78bfa', '#818cf8', '#7dd3fc']}
+                fillOpacity={0.15}
+                glowIntensity={1.2}
+                edgeSensitivity={20}
+              >
+                <Placeholder ratio="9:16" index={2} />
+              </BorderGlow>
               <div className="project-meta below">
                 <span className="project-cat">{projects[1].category}</span>
                 <h2 className="project-title">{projects[1].title}</h2>
