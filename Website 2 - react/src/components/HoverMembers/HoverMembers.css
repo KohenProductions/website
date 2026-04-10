@@ -1,0 +1,248 @@
+/* Hover members — skiper6 / Buzzworthy directors-style: custom cursor, 3D tilt, parallax text */
+
+.hover-members {
+  --hm-bg: #0a0a0a;
+  --hm-text: #f4f4f5;
+  --hm-muted: rgba(244, 244, 245, 0.45);
+  --hm-border: rgba(255, 255, 255, 0.08);
+  --hm-shine: rgba(255, 255, 255, 0.06);
+
+  position: relative;
+  width: 100vw;
+  max-width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-top: 3rem;
+  padding: 3rem 1.5rem 2.75rem;
+  box-sizing: border-box;
+  background: var(--hm-bg);
+  color: var(--hm-text);
+  overflow: clip;
+}
+
+.hover-members--hide-system-cursor {
+  cursor: none;
+}
+
+.hover-mem-cursor {
+  position: fixed;
+  z-index: 9999;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  mix-blend-mode: difference;
+  transform: translate(-50%, -50%);
+  will-change: transform, opacity;
+}
+
+.hover-mem-cursor-dot {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  margin: -3px 0 0 -3px;
+  border-radius: 50%;
+  background: #fff;
+}
+
+.hover-mem-cursor-ring {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 42px;
+  height: 42px;
+  margin: -21px 0 0 -21px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.95);
+  opacity: 0.55;
+}
+
+.hover-members-head {
+  margin-bottom: 2rem;
+  max-width: 72rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.hover-members-label {
+  display: block;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--hm-muted);
+  margin-bottom: 0.4rem;
+}
+
+.hover-members-title {
+  margin: 0;
+  font-size: clamp(1.5rem, 3.5vw, 2rem);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  color: var(--hm-text);
+}
+
+.hover-members-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: clamp(0.75rem, 2.5vw, 1.75rem);
+  width: 100%;
+  max-width: 72rem;
+  margin: 0 auto;
+}
+
+.hover-mem-card {
+  flex: 0 1 auto;
+  width: clamp(7.5rem, 16vw, 11.5rem);
+}
+
+.hover-mem-inner {
+  position: relative;
+  border-radius: 0.25rem;
+  overflow: hidden;
+  background: #141414;
+  box-shadow:
+    0 0 0 1px var(--hm-border),
+    0 24px 48px -28px rgba(0, 0, 0, 0.85);
+  outline: none;
+  perspective: 900px;
+  transform-style: preserve-3d;
+}
+
+.hover-mem-inner:focus-visible {
+  box-shadow:
+    0 0 0 2px var(--hm-bg),
+    0 0 0 4px rgba(129, 140, 248, 0.65),
+    0 24px 48px -28px rgba(0, 0, 0, 0.85);
+}
+
+.hover-mem-photo-wrap {
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.hover-mem-photo {
+  aspect-ratio: 3 / 4;
+  width: 100%;
+  position: relative;
+  transform-origin: center center;
+  overflow: hidden;
+}
+
+.hover-mem-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.hover-mem-photo::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(10, 10, 10, 0.88) 0%,
+    rgba(10, 10, 10, 0.2) 42%,
+    transparent 62%
+  );
+  pointer-events: none;
+  transition: opacity 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  opacity: 0.9;
+  z-index: 1;
+}
+
+.hover-mem-inner:hover .hover-mem-photo::after,
+.hover-mem-inner:focus-visible .hover-mem-photo::after {
+  opacity: 0.45;
+}
+
+.hover-mem-copy {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 1rem 0.85rem 1.15rem;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.hover-mem-name {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0.06em;
+  font-family: var(--font, 'Inter', system-ui, sans-serif);
+  font-size: clamp(0.88rem, 2vw, 1.1rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  color: var(--hm-text);
+  will-change: transform;
+}
+
+.hover-mem-char {
+  display: inline-block;
+  white-space: pre;
+}
+
+.hover-mem-role {
+  margin: 0.42rem 0 0;
+  font-size: 0.6rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--hm-muted);
+  overflow: hidden;
+  will-change: transform;
+}
+
+.hover-mem-role-inner {
+  display: block;
+}
+
+.hover-members-foot {
+  margin: 2rem auto 0;
+  max-width: 72rem;
+  text-align: center;
+  font-size: 0.6rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--hm-muted);
+  opacity: 0.5;
+  line-height: 1.6;
+}
+
+.hover-members-foot a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.hover-members-foot a:hover {
+  opacity: 0.95;
+}
+
+@media (max-width: 640px) {
+  .hover-members {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .hover-members-row {
+    justify-content: center;
+  }
+}
+
+@media (hover: none), (pointer: coarse) {
+  .hover-members--hide-system-cursor {
+    cursor: auto;
+  }
+
+  .hover-mem-cursor {
+    display: none !important;
+  }
+}

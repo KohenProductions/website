@@ -321,75 +321,101 @@ a { color: inherit; text-decoration: none; }
   letter-spacing: 0.01em;
 }
 
-/* Karl Studio scroll stack */
-.karl-stack-wrap {
-  height: 80vh;
+/* ── Bettercare grid ── */
+.bettercare-grid {
+  display: grid;
+  /*  col 1: portrait  |  col 2: ½ right  |  col 3: ½ right
+      Ratio chosen so portrait (4:5) height ≈ kravmaga-row + gap + game-row */
+  grid-template-columns: 1.42fr 1fr 1fr;
+  grid-template-rows: auto auto;
+  column-gap: 0.5rem;
+  row-gap: 0; /* row gap is handled by bc-item padding so captions align cleanly */
   width: 100%;
-  margin-top: 1rem;
+  align-items: start;
 }
 
-.karl-stack-wrap .scroll-stack-inner {
-  padding: 4vh 0 40rem;
-}
-
-.karl-stack-wrap .scroll-stack-card {
-  background: rgba(255,255,255,0.6);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(0,0,0,0.07);
-  border-radius: 20px;
-  height: 28rem;
-  padding: 0;
-  overflow: hidden;
-}
-
-.karl-card-inner {
+/* Each item = video cell + caption stacked */
+.bc-item {
   display: flex;
   flex-direction: column;
-  height: 100%;
+  gap: 0.55rem;
+  padding-bottom: 1.5rem; /* vertical rhythm between rows */
 }
 
-.karl-card-placeholder {
-  flex: 1;
-  background: #E0DED9;
-  position: relative;
+/* Portrait: spans both rows */
+.bc-item--portrait {
+  grid-column: 1;
+  grid-row: 1 / 3;
+  padding-bottom: 0;
+}
+
+/* Hero (kravmaga): wide top-right */
+.bc-item--hero {
+  grid-column: 2 / 4;
+  grid-row: 1;
+}
+
+/* Game: bottom-middle */
+.bc-item--game {
+  grid-column: 2;
+  grid-row: 2;
+  padding-bottom: 0;
+}
+
+/* Medican: bottom-right */
+.bc-item--medican {
+  grid-column: 3;
+  grid-row: 2;
+  padding-bottom: 0;
+}
+
+/* Video wrapper — clips to rounded corners */
+.bc-cell {
+  border-radius: 10px;
   overflow: hidden;
-  cursor: pointer;
+  background: #0d0d0d;
+  flex-shrink: 0;
 }
 
-.karl-card-placeholder::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, #d8d6d1 25%, #e8e6e1 50%, #d8d6d1 75%);
-  background-size: 400% 400%;
-  animation: shimmer 4s ease-in-out infinite;
+.bc-cell .vp {
+  display: block; /* removes any inline gap */
+  border-radius: 0;
 }
 
-.karl-card-placeholder.has-video::after {
-  display: none;
+/* Portrait cell stretches to match right-side height */
+.bc-item--portrait .bc-cell {
+  flex: 1;
 }
 
-.karl-card-meta {
+.bc-item--portrait .bc-cell .vp {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: unset; /* let it fill the flex-grown cell */
+}
+
+/* Caption row */
+.bc-caption {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1rem 1.5rem;
-  border-top: 1px solid rgba(0,0,0,0.06);
+  align-items: baseline;
+  gap: 0.55rem;
+  padding: 0 0.1rem;
 }
 
-.karl-card-num {
-  font-size: 0.7rem;
+.bc-cat {
+  font-size: 0.65rem;
   letter-spacing: 0.1em;
-  opacity: 0.3;
-  font-weight: 600;
+  text-transform: uppercase;
+  opacity: 0.35;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
-.karl-card-label {
+.bc-title-ph {
   font-size: 0.85rem;
   font-weight: 500;
   letter-spacing: -0.01em;
-  opacity: 0.6;
+  opacity: 0.28;
+  font-style: italic;
 }
 
 /* Row layouts */

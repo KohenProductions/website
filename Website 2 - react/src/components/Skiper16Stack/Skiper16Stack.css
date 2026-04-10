@@ -1,0 +1,261 @@
+/* Sticky scroll card stack — pattern from https://skiper-ui.com/v1/skiper16 */
+
+.skiper16-root {
+  --skiper16-scale: 0.75;
+
+  /* Text band + index row clearance (× scale) — sticky tops align with visible strips */
+  --skiper16-peek: calc(
+    (
+        1.5rem + 0.65rem + 0.35rem + clamp(1.75rem, 4vw, 2.75rem) + 0.65rem +
+          0.85rem
+      ) * var(--skiper16-scale)
+  );
+
+  position: relative;
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  box-sizing: border-box;
+}
+
+/* Scroll-driven motion uses this height only; tail below = page keeps scrolling, p stays clamped at 1 */
+.skiper16-stack-track {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: 50vh;
+  padding-bottom: min(8vh, 5rem);
+  box-sizing: border-box;
+}
+
+/* Extra scroll after cards 2, 3, and 4 */
+.skiper16-stack-section-gap {
+  width: 100%;
+  min-height: min(160vh, 96rem);
+  flex-shrink: 0;
+  pointer-events: none;
+}
+
+.skiper16-stack-end-spacer {
+  width: 100%;
+  min-height: min(300vh, 150rem);
+  flex-shrink: 0;
+  pointer-events: none;
+}
+
+.skiper16-tail {
+  width: 100%;
+  min-height: min(100vh, 56rem);
+  flex-shrink: 0;
+  pointer-events: none;
+}
+
+.skiper16-stick {
+  height: 100vh;
+  width: 100%;
+  max-width: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  position: sticky;
+  /* top set per card: calc(var(--skiper16-index) * var(--skiper16-peek)) */
+  padding-top: clamp(
+    calc(0.5rem * var(--skiper16-scale)),
+    calc(3vh * var(--skiper16-scale)),
+    calc(2rem * var(--skiper16-scale))
+  );
+  box-sizing: border-box;
+  pointer-events: none;
+}
+
+.skiper16-card-darken {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  border-radius: inherit;
+  /* Stronger toward bottom (peek / next card); whole layer opacity is scroll-driven */
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.42) 0%,
+    rgba(0, 0, 0, 0.22) 38%,
+    rgba(0, 0, 0, 0.08) 100%
+  );
+}
+
+.skiper16-card {
+  position: relative;
+  pointer-events: auto;
+  width: min(calc(90vw * var(--skiper16-scale)), calc(52rem * var(--skiper16-scale)));
+  border-radius: calc(1.5rem * var(--skiper16-scale));
+  overflow: hidden;
+  background: #0c0c0e;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.06),
+    0 calc(25px * var(--skiper16-scale)) calc(50px * var(--skiper16-scale))
+      calc(-12px * var(--skiper16-scale)) rgba(0, 0, 0, 0.55),
+    0 0 calc(80px * var(--skiper16-scale)) calc(-20px * var(--skiper16-scale))
+      rgba(99, 102, 241, 0.15);
+  transform-origin: 50% 0%;
+  will-change: transform;
+}
+
+.skiper16-visual {
+  aspect-ratio: 16 / 9;
+  width: 100%;
+  position: relative;
+}
+
+.skiper16-visual--gallery {
+  background-size: cover;
+  background-position: center;
+}
+
+.skiper16-visual--embed-vp {
+  padding: 0;
+  overflow: hidden;
+}
+
+.skiper16-visual--embed-vp .vp {
+  width: 100%;
+}
+
+.skiper16-visual--center-frame {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.skiper16-center-frame-img {
+  max-width: 88%;
+  max-height: 88%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  display: block;
+}
+
+.skiper16-gallery-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.skiper16-gallery-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 4;
+  width: calc(2.5rem * var(--skiper16-scale));
+  height: calc(2.5rem * var(--skiper16-scale));
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.92);
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.skiper16-gallery-btn:hover {
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+}
+
+.skiper16-gallery-btn:focus-visible {
+  outline: 2px solid rgba(129, 140, 248, 0.85);
+  outline-offset: 2px;
+}
+
+.skiper16-gallery-btn--prev {
+  left: calc(0.65rem * var(--skiper16-scale));
+}
+
+.skiper16-gallery-btn--next {
+  right: calc(0.65rem * var(--skiper16-scale));
+}
+
+.skiper16-num {
+  position: absolute;
+  top: calc(1.35rem * var(--skiper16-scale));
+  right: calc(1.5rem * var(--skiper16-scale));
+  z-index: 3;
+  font-size: calc(0.75rem * var(--skiper16-scale));
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  color: rgba(255, 255, 255, 0.35);
+  font-variant-numeric: tabular-nums;
+  text-shadow:
+    0 calc(0.06em * var(--skiper16-scale)) calc(0.35em * var(--skiper16-scale)) rgba(0, 0, 0, 0.75),
+    0 calc(0.12em * var(--skiper16-scale)) calc(1em * var(--skiper16-scale)) rgba(0, 0, 0, 0.45);
+}
+
+.skiper16-meta {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: calc(1.5rem * var(--skiper16-scale)) calc(1.75rem * var(--skiper16-scale));
+  z-index: 2;
+  text-align: left;
+}
+
+.skiper16-kicker {
+  display: block;
+  font-size: calc(0.65rem * var(--skiper16-scale));
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+  margin-bottom: calc(0.35rem * var(--skiper16-scale));
+  text-shadow:
+    0 calc(0.08em * var(--skiper16-scale)) calc(0.4em * var(--skiper16-scale)) rgba(0, 0, 0, 0.78),
+    0 calc(0.15em * var(--skiper16-scale)) calc(1.1em * var(--skiper16-scale)) rgba(0, 0, 0, 0.5);
+}
+
+.skiper16-title {
+  margin: 0;
+  font-size: clamp(
+    calc(1.75rem * var(--skiper16-scale)),
+    calc(4vw * var(--skiper16-scale)),
+    calc(2.75rem * var(--skiper16-scale))
+  );
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  color: #fff;
+  text-shadow:
+    0 calc(0.04em * var(--skiper16-scale)) calc(0.25em * var(--skiper16-scale)) rgba(0, 0, 0, 0.85),
+    0 calc(0.1em * var(--skiper16-scale)) calc(0.65em * var(--skiper16-scale)) rgba(0, 0, 0, 0.55);
+}
+
+.skiper16-attribution {
+  margin: 2rem auto 0;
+  max-width: min(calc(90vw * var(--skiper16-scale)), calc(52rem * var(--skiper16-scale)));
+  text-align: center;
+  font-size: calc(0.65rem * var(--skiper16-scale));
+  letter-spacing: 0.04em;
+  opacity: 0.35;
+}
+
+.skiper16-attribution a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: calc(3px * var(--skiper16-scale));
+}
+
+.skiper16-attribution a:hover {
+  opacity: 0.9;
+}

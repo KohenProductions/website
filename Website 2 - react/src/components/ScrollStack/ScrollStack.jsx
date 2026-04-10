@@ -19,6 +19,7 @@ const ScrollStack = ({
   rotationAmount = 0,
   blurAmount = 0,
   useWindowScroll = false,
+  horizontalOffset = 0,
   onStackComplete
 }) => {
   const scrollerRef = useRef(null);
@@ -119,7 +120,7 @@ const ScrollStack = ({
         Math.abs(lastTransform.blur - newTransform.blur) > 0.1;
 
       if (hasChanged) {
-        card.style.transform = `translate3d(0, ${newTransform.translateY}px, 0) scale(${newTransform.scale}) rotate(${newTransform.rotation}deg)`;
+        card.style.transform = `translate3d(${i * horizontalOffset}px, ${newTransform.translateY}px, 0) scale(${newTransform.scale}) rotate(${newTransform.rotation}deg)`;
         card.style.filter = newTransform.blur > 0 ? `blur(${newTransform.blur}px)` : '';
         lastTransformsRef.current.set(i, newTransform);
       }
@@ -132,7 +133,7 @@ const ScrollStack = ({
     });
 
     isUpdatingRef.current = false;
-  }, [itemScale, itemStackDistance, stackPosition, scaleEndPosition, baseScale, rotationAmount, blurAmount, useWindowScroll, onStackComplete, calculateProgress, parsePercentage, getScrollData, getElementOffset]);
+  }, [itemScale, itemStackDistance, stackPosition, scaleEndPosition, baseScale, rotationAmount, blurAmount, horizontalOffset, useWindowScroll, onStackComplete, calculateProgress, parsePercentage, getScrollData, getElementOffset]);
 
   const handleScroll = useCallback(() => { updateCardTransforms(); }, [updateCardTransforms]);
 
@@ -192,8 +193,10 @@ const ScrollStack = ({
       if (i < cards.length - 1) card.style.marginBottom = `${itemDistance}px`;
       card.style.willChange = 'transform, filter';
       card.style.transformOrigin = 'top center';
-      card.style.backfaceVisibility = 'hidden';
-      card.style.transform = 'translateZ(0)';
+      card.style.backfaceVisibility = 'visible';
+      // No translateZ(0) here — updateCardTransforms() sets the real transform
+      // immediately below, so this initial set would just add a redundant layer
+      // promotion state before the correct transform is applied.
     });
 
     setupLenis();

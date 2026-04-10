@@ -2,14 +2,15 @@ import { useRef } from 'react';
 import AnimatedContent from './components/AnimatedContent/AnimatedContent';
 import VideoPlayer from './components/VideoPlayer/VideoPlayer';
 import VariableProximity from './components/VariableProximity/VariableProximity';
-import ScrollStack, { ScrollStackItem } from './components/ScrollStack/ScrollStack';
 import BorderGlow from './components/BorderGlow/BorderGlow';
+import Skiper16Stack from './components/Skiper16Stack/Skiper16Stack';
+import HoverMembers from './components/HoverMembers/HoverMembers';
 import Aurora from './components/Aurora/Aurora';
 import './App.css';
 
 const projects = [
   { id: 1, title: 'Karl Studio',   category: 'Brand Film',      ratio: '16:9', year: '2026', client: 'Karl Studio', clientDesc: 'Menswear boutique · TLV & Jerusalem' },
-  { id: 2, title: 'Project Two',   category: 'Social Content',  ratio: '9:16', year: '2024' },
+  { id: 2, title: 'Bettercare',    category: 'Social Content',  ratio: '9:16', year: '2024', clientDesc: 'Health & wellness app · Israel' },
   { id: 3, title: 'Project Three', category: 'Documentary',     ratio: '16:9', year: '2024' },
   { id: 4, title: 'Project Four',  category: 'AI Commercial',   ratio: '9:16', year: '2024' },
   { id: 5, title: 'Project Five',  category: 'Brand Film',      ratio: '16:9', year: '2023' },
@@ -123,58 +124,80 @@ export default function App() {
             </div>
           </AnimatedContent>
 
-          {/* Remaining 4 commercials — ScrollStack */}
-          <div className="karl-stack-wrap">
-            <ScrollStack
-              useWindowScroll={false}
-              itemDistance={120}
-              itemScale={0.04}
-              itemStackDistance={24}
-              stackPosition="18%"
-              baseScale={0.88}
-              rotationAmount={0}
-              blurAmount={1}
-            >
-              {[
-                { num: '02', label: 'The Fitting' },
-                { num: '03', label: 'City Cut' },
-                { num: '04', label: 'Jerusalem Stone' },
-                { num: '05', label: 'The Signature' },
-              ].map(({ num, label }) => (
-                <ScrollStackItem key={num}>
-                  <div className="karl-card-inner">
-                    <div className="karl-card-placeholder" />
-                    <div className="karl-card-meta">
-                      <span className="karl-card-num">{num}</span>
-                      <span className="karl-card-label">{label}</span>
-                    </div>
-                  </div>
-                </ScrollStackItem>
-              ))}
-            </ScrollStack>
-          </div>
+          <Skiper16Stack />
+          <HoverMembers />
         </div>
 
-        {/* 2 — Centered 9:16 */}
-        <div className="project-row centered">
-          <AnimatedContent distance={60} duration={1} scale={0.97}>
-            <div className="project-portrait">
-              <BorderGlow
-                backgroundColor="transparent"
-                borderRadius={6}
-                glowRadius={28}
-                glowColor="270 80 75"
-                colors={['#a78bfa', '#818cf8', '#7dd3fc']}
-                fillOpacity={0.15}
-                glowIntensity={1.2}
-                edgeSensitivity={20}
-              >
-                <Placeholder ratio="9:16" index={2} />
-              </BorderGlow>
-              <div className="project-meta below">
+        {/* 2 — Bettercare — 4-video grid */}
+        <div className="project-feature">
+          <AnimatedContent distance={30} duration={0.8}>
+            <div className="project-feature-header">
+              <div className="project-feature-left">
                 <span className="project-cat">{projects[1].category}</span>
-                <h2 className="project-title">{projects[1].title}</h2>
+                <h2 className="project-feature-title">{projects[1].title}</h2>
               </div>
+              <div className="project-feature-right">
+                <span className="project-feature-client">{projects[1].clientDesc}</span>
+                <span className="project-year">{projects[1].year}</span>
+              </div>
+            </div>
+          </AnimatedContent>
+
+          <AnimatedContent distance={50} duration={1} delay={0.1}>
+            <div className="bettercare-grid">
+
+              {/* Portrait — AI (4:5) — spans both rows */}
+              <div className="bc-item bc-item--portrait">
+                <div className="bc-cell">
+                  <VideoPlayer src="/bettercare/Bettercare - ai.mp4" className="vp--portrait" />
+                </div>
+                <div className="bc-caption">
+                  <span className="bc-cat">AI</span>
+                  <span className="bc-title-ph">Title placeholder</span>
+                </div>
+              </div>
+
+              {/* Hero — Krav Maga (16:9) — top right, wide */}
+              <div className="bc-item bc-item--hero">
+                <div className="bc-cell">
+                  <VideoPlayer src="/bettercare/Bettercare - kravmaga.mp4" />
+                </div>
+                <div className="bc-caption">
+                  <span className="bc-cat">Fitness</span>
+                  <span className="bc-title-ph">Title placeholder</span>
+                </div>
+              </div>
+
+              {/* Game (3:2) — bottom middle */}
+              <div className="bc-item bc-item--game">
+                <div className="bc-cell">
+                  <VideoPlayer src="/bettercare/Bettercare - game.mp4" />
+                </div>
+                <div className="bc-caption">
+                  <span className="bc-cat">Gaming</span>
+                  <span className="bc-title-ph">Title placeholder</span>
+                </div>
+              </div>
+
+              {/* Medical (16:9) — bottom right */}
+              <div className="bc-item bc-item--medican">
+                <div className="bc-cell">
+                  <VideoPlayer src="/bettercare/Bettercare - medican.mp4" />
+                </div>
+                <div className="bc-caption">
+                  <span className="bc-cat">Medical</span>
+                  <span className="bc-title-ph">Title placeholder</span>
+                </div>
+              </div>
+
+            </div>
+          </AnimatedContent>
+
+          <AnimatedContent distance={30} duration={0.9} delay={0.2}>
+            <div className="project-feature-desc">
+              <p>
+                Four short-form social ads for Bettercare — each built around a different content vertical. From AI-generated health insights to krav maga training, gaming challenges, and medical explainers, the campaign speaks to a wide audience with a consistent visual voice. Fast-cut, platform-native, designed to stop the scroll.
+              </p>
             </div>
           </AnimatedContent>
         </div>

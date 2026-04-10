@@ -7,6 +7,11 @@
   background: #000;
 }
 
+/* Portrait variant — used in Bettercare grid */
+.vp--portrait {
+  aspect-ratio: 4 / 5;
+}
+
 .vp__video {
   position: absolute;
   inset: 0;

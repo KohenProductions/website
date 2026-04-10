@@ -22,3 +22,10 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Local Premiere / source exports (not part of the deployed site)
+תיקיית עריכה/
+
+# Over GitHub size limits — keep locally or host elsewhere / Git LFS
+public/bettercare/Bettercare - ai.mp4
+public/karl studio/frames/card3a.gif
