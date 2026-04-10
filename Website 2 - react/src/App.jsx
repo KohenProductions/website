@@ -4,7 +4,8 @@ import VideoPlayer from './components/VideoPlayer/VideoPlayer';
 import VariableProximity from './components/VariableProximity/VariableProximity';
 import BorderGlow from './components/BorderGlow/BorderGlow';
 import Skiper16Stack from './components/Skiper16Stack/Skiper16Stack';
-import HoverMembers from './components/HoverMembers/HoverMembers';
+import HoverExpandGallery from './components/HoverExpandGallery/HoverExpandGallery';
+import HoverExpandShowcase, { FASHION_HOVER_EXPAND_ITEMS } from './components/HoverExpandShowcase/HoverExpandShowcase';
 import Aurora from './components/Aurora/Aurora';
 import './App.css';
 
@@ -89,7 +90,7 @@ export default function App() {
       <section className="projects" id="work">
 
         {/* 1 — Full-width 16:9 with header above and description below */}
-        <div className="project-feature">
+        <div className="project-feature project-feature--karl-stack">
           <AnimatedContent distance={30} duration={0.8} delay={0}>
             <div className="project-feature-header">
               <div className="project-feature-left">
@@ -124,9 +125,17 @@ export default function App() {
             </div>
           </AnimatedContent>
 
-          <Skiper16Stack />
-          <HoverMembers />
+          <Skiper16Stack className="skiper16-root--tight-intro" />
+          <HoverExpandShowcase
+            items={FASHION_HOVER_EXPAND_ITEMS}
+            label="International"
+            title="Magazine publications"
+            headingId="core-team-expand-heading"
+            variant="fashion"
+          />
         </div>
+
+        <HoverExpandGallery />
 
         {/* 2 — Bettercare — 4-video grid */}
         <div className="project-feature">

@@ -265,7 +265,7 @@ function StickyCard({ i, n, title, kicker, gradient, scrollYProgress }) {
   );
 }
 
-export default function Skiper16Stack() {
+export default function Skiper16Stack({ className = '' }) {
   const stackTrackRef = useRef(null);
   const { scrollYProgress } = useScroll({
     target: stackTrackRef,
@@ -273,9 +273,10 @@ export default function Skiper16Stack() {
   });
 
   const n = CARDS.length;
+  const rootClass = ['skiper16-root', className].filter(Boolean).join(' ');
 
   return (
-    <div className="skiper16-root">
+    <div className={rootClass}>
       <div className="skiper16-stack-track" ref={stackTrackRef}>
         {CARDS.map((card, i) => (
           <Fragment key={card.title}>

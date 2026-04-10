@@ -41,6 +41,18 @@ const DEFAULT_TEAM = [
   },
 ];
 
+/** For HoverExpandShowcase (skiper35) — same roster as this module */
+export function teamToExpandShowcaseItems(team = DEFAULT_TEAM) {
+  return team.map((m, i) => ({
+    id: `team-${i}-${m.name.replace(/\s+/g, '-').toLowerCase()}`,
+    kicker: m.role,
+    title: m.name,
+    year: String(2019 + ((i * 2) % 7)),
+    gradient: m.gradient,
+    image: m.image,
+  }));
+}
+
 const springCursor = { stiffness: 500, damping: 35, mass: 0.35 };
 const springCard = { stiffness: 280, damping: 28, mass: 0.45 };
 const springText = { stiffness: 220, damping: 26, mass: 0.4 };

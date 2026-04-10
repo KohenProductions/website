@@ -1,0 +1,245 @@
+/* Skiper35-style: vertical strip labels · open = spine + image · hairline dividers */
+
+.hover-expand-showcase {
+  --hes-bg: #0a0a0a;
+  --hes-text: #f4f4f5;
+  --hes-muted: rgba(244, 244, 245, 0.45);
+  --hes-border: rgba(255, 255, 255, 0.1);
+  --hes-divider: rgba(255, 255, 255, 0.14);
+
+  width: 100vw;
+  max-width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-top: 0;
+  padding: 2.75rem 1.25rem 2.25rem;
+  box-sizing: border-box;
+  background: var(--hes-bg);
+  color: var(--hes-text);
+  overflow: clip;
+}
+
+.hes-head {
+  max-width: 72rem;
+  margin: 0 auto 1.5rem;
+  text-align: center;
+}
+
+.hes-label {
+  display: block;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--hes-muted);
+  margin-bottom: 0.4rem;
+}
+
+.hes-title {
+  margin: 0;
+  font-size: clamp(1.5rem, 3.4vw, 1.95rem);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+
+.hes-hint {
+  margin: 0.65rem 0 0;
+  font-size: 0.72rem;
+  opacity: 0.4;
+  letter-spacing: 0.04em;
+}
+
+/* Rounded shell + 1px gutters like the reference */
+.hes-row-shell {
+  max-width: 72rem;
+  margin: 0 auto;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.06),
+    0 24px 56px rgba(0, 0, 0, 0.45);
+  background: var(--hes-divider);
+}
+
+.hes-row {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 1px;
+  height: clamp(18rem, 52vw, 28rem);
+  overflow-x: auto;
+  overflow-y: visible;
+  -webkit-overflow-scrolling: touch;
+  background: var(--hes-divider);
+}
+
+.hes-panel {
+  position: relative;
+  flex-basis: 0;
+  min-width: 0;
+  min-height: 0;
+  cursor: pointer;
+  border: none;
+  border-radius: 0;
+  outline: none;
+  background: #121212;
+  box-shadow: none;
+}
+
+.hes-panel:focus-visible {
+  outline: 2px solid rgba(129, 140, 248, 0.85);
+  outline-offset: -2px;
+  z-index: 2;
+}
+
+.hes-panel-bg {
+  position: absolute;
+  inset: -2px;
+  z-index: 0;
+  background-size: cover;
+  background-position: center;
+  transform-origin: center center;
+}
+
+.hes-panel--open .hes-panel-bg {
+  inset: 0;
+  border-radius: 0 12px 12px 0;
+}
+
+/* Collapsed: even vignette for vertical type */
+.hes-panel:not(.hes-panel--open) .hes-panel-scrim {
+  opacity: 1;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.38) 0%, rgba(0, 0, 0, 0.58) 100%);
+}
+
+/* Open: lighter top, legible image */
+.hes-panel--open .hes-panel-scrim {
+  opacity: 1;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.62) 0%, transparent 38%);
+}
+
+/* Collapsed — vertical label (bottom → top read) */
+.hes-collapsed-strip {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 0;
+  pointer-events: none;
+}
+
+.hes-collapsed-title {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  font-size: clamp(0.56rem, 1.35vw, 0.7rem);
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.92);
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.65);
+  max-height: 92%;
+  overflow: hidden;
+  line-height: 1.35;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* Open — spine + image area (bg); kicker bottom-left on image */
+.hes-expanded-ui {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: grid;
+  grid-template-columns: clamp(2.15rem, 5.5vw, 2.85rem) 1fr;
+  pointer-events: none;
+}
+
+.hes-spine {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.75rem;
+  padding: 0.65rem 0.2rem 0.85rem;
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.82) 0%, rgba(0, 0, 0, 0.35) 100%);
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.hes-spine-year {
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: rgba(255, 255, 255, 0.45);
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+}
+
+.hes-spine-name {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  font-size: clamp(0.58rem, 1.2vw, 0.72rem);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  line-height: 1.3;
+  color: rgba(255, 255, 255, 0.92);
+  text-align: center;
+  max-height: 100%;
+  overflow: hidden;
+}
+
+.hes-expanded-right {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-width: 0;
+  padding: 0 0.85rem 0.75rem 0.35rem;
+}
+
+.hes-expanded-meta {
+  align-self: flex-start;
+}
+
+.hes-kicker {
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.48);
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.6);
+}
+
+.hes-foot {
+  max-width: 72rem;
+  margin: 1.35rem auto 0;
+  font-size: 0.65rem;
+  letter-spacing: 0.04em;
+  opacity: 0.32;
+  text-align: center;
+  color: var(--hes-muted);
+}
+
+.hes-foot a {
+  color: rgba(244, 244, 245, 0.75);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.hes-foot a:hover {
+  opacity: 1;
+}
+
+@media (max-width: 640px) {
+  .hes-panel {
+    min-width: 2.65rem;
+  }
+
+  .hes-row-shell {
+    border-radius: 10px;
+  }
+}

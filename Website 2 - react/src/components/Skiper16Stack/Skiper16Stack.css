@@ -32,6 +32,11 @@
   box-sizing: border-box;
 }
 
+/* When stack follows in-page copy: less empty runway before first card */
+.skiper16-root.skiper16-root--tight-intro .skiper16-stack-track {
+  padding-top: min(16vh, 5.5rem);
+}
+
 /* Extra scroll after cards 2, 3, and 4 */
 .skiper16-stack-section-gap {
   width: 100%;
@@ -42,14 +47,14 @@
 
 .skiper16-stack-end-spacer {
   width: 100%;
-  min-height: min(300vh, 150rem);
+  min-height: min(18vh, 11rem);
   flex-shrink: 0;
   pointer-events: none;
 }
 
 .skiper16-tail {
   width: 100%;
-  min-height: min(100vh, 56rem);
+  min-height: 0;
   flex-shrink: 0;
   pointer-events: none;
 }
@@ -242,7 +247,7 @@
 }
 
 .skiper16-attribution {
-  margin: 2rem auto 0;
+  margin: 0.25rem auto 0;
   max-width: min(calc(90vw * var(--skiper16-scale)), calc(52rem * var(--skiper16-scale)));
   text-align: center;
   font-size: calc(0.65rem * var(--skiper16-scale));
