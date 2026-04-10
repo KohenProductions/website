@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
+import { useReducedMotion } from 'motion/react';
+import BorderGlow from '../BorderGlow/BorderGlow';
+import VideoPlayer from '../VideoPlayer/VideoPlayer';
 import GalleryDrawingTrail from './GalleryDrawingTrail';
 import './HoverExpandGallery.css';
 
@@ -15,14 +17,11 @@ function publicAiVideo(filename) {
 }
 
 const DEFAULT_ITEMS = [
-  { id: 'models', code: '# 01', label: 'Models', src: publicAiVideo('Models.mp4'), expandAspect: '9/16' },
-  { id: 'gracewide', code: '# 02', label: 'Grace wide', src: publicAiVideo('gracewide.mp4') },
-  { id: 'grace-door', code: '# 03', label: 'Grace door', src: publicAiVideo('GraceDoor.mp4') },
-  { id: 'sunglasses', code: '# 04', label: 'Sunglasses', src: publicAiVideo('Sunglasses.mp4'), expandAspect: '9/16' },
+  { id: 'models', code: '# 01', label: 'Menswear', src: publicAiVideo('Models.mp4'), expandAspect: '9/16' },
+  { id: 'gracewide', code: '# 02', label: 'Authenticity', src: publicAiVideo('gracewide.mp4') },
+  { id: 'grace-door', code: '# 03', label: 'Abstract', src: publicAiVideo('GraceDoor.mp4') },
+  { id: 'sunglasses', code: '# 04', label: 'Style', src: publicAiVideo('Sunglasses.mp4'), expandAspect: '9/16' },
 ];
-
-/* Slower, relaxed overlay fades (matches calmer strip width transition) */
-const easeStrip = { duration: 0.52, ease: [0.22, 1, 0.36, 1] };
 
 export default function HoverExpandGallery({ items = DEFAULT_ITEMS }) {
   const reduceMotion = useReducedMotion();
@@ -31,7 +30,6 @@ export default function HoverExpandGallery({ items = DEFAULT_ITEMS }) {
     () => typeof window !== 'undefined' && window.matchMedia('(pointer: fine)').matches,
   );
   const [active, setActive] = useState(0);
-  const transition = reduceMotion ? { duration: 0.01 } : easeStrip;
 
   useEffect(() => {
     const mq = window.matchMedia('(pointer: fine)');
@@ -78,59 +76,36 @@ export default function HoverExpandGallery({ items = DEFAULT_ITEMS }) {
       <div className="hover-expand-scroll">
         <div className="hover-expand-row" role="list">
           {items.map((item, i) => {
-            const isActive = active === i;
             return (
               <div
                 key={item.id}
-                className={`hover-expand-strip${isActive ? ' hover-expand-strip--active' : ''}${item.expandAspect === '9/16' ? ' hover-expand-strip--expand-916' : ''}`}
+                className={`hover-expand-strip${active === i ? ' hover-expand-strip--active' : ''}${item.expandAspect === '9/16' ? ' hover-expand-strip--expand-916' : ''}`}
                 role="listitem"
                 tabIndex={0}
                 onPointerEnter={() => activate(i)}
                 onPointerDown={() => activate(i)}
                 onKeyDown={e => onKeyDown(e, i)}
-                aria-selected={isActive}
-                aria-label={`${item.label}, ${item.code}`}
+                aria-selected={active === i}
+                aria-label={`${item.code.replace('# ', '')} - ${item.label}`}
               >
                 <div className="hover-expand-frame">
-                  <video
-                    className="hover-expand-video"
-                    src={item.src}
-                    muted
-                    loop
-                    playsInline
-                    autoPlay
-                    preload="metadata"
-                    aria-hidden
-                  />
-
-                  <AnimatePresence>
-                    {isActive ? (
-                      <motion.div
-                        key="shade"
-                        className="hover-expand-shade"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={transition}
-                      />
-                    ) : null}
-                  </AnimatePresence>
-
-                  <AnimatePresence>
-                    {isActive ? (
-                      <motion.div
-                        key="meta"
-                        className="hover-expand-meta"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={transition}
-                      >
-                        <span className="hover-expand-code">{item.code}</span>
-                        <span className="hover-expand-strip-label">{item.label}</span>
-                      </motion.div>
-                    ) : null}
-                  </AnimatePresence>
+                  <BorderGlow
+                    className="heg-border-glow"
+                    backgroundColor="transparent"
+                    borderRadius={10}
+                    glowRadius={28}
+                    glowColor="270 80 75"
+                    colors={['#a78bfa', '#818cf8', '#7dd3fc']}
+                    fillOpacity={0.12}
+                    glowIntensity={1.1}
+                    edgeSensitivity={20}
+                  >
+                    <VideoPlayer
+                      src={item.src}
+                      className="vp--fill-frame"
+                      compactHud={item.expandAspect === '9/16'}
+                    />
+                  </BorderGlow>
                 </div>
               </div>
             );

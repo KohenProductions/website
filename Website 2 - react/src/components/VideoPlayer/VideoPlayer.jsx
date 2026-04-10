@@ -108,6 +108,8 @@ export default function VideoPlayer({
   placeholderSrc,
   /** Click/tap anywhere on the video or photo surface toggles play/pause (HUD chrome still uses its own handlers). */
   tapToTogglePlay = true,
+  /** Smaller HUD (e.g. narrow 9:16 tiles in HoverExpandGallery). */
+  compactHud = false,
 }) {
   const videoRef     = useRef(null);
   const containerRef = useRef(null);
@@ -229,10 +231,13 @@ export default function VideoPlayer({
     [tapToTogglePlay, togglePlay, resetHideTimer],
   );
 
+  /* Portrait strip vs 16:9 width ratio ≈ 0.32; sqrt ≈ 0.57 — use 0.62 for legible compact HUD */
+  const hudScale = compactHud ? 0.62 : 1;
+
   return (
     <div
       ref={containerRef}
-      className={`vp${placeholder ? ' vp--placeholder' : ''} ${className}`.trim()}
+      className={`vp${placeholder ? ' vp--placeholder' : ''}${compactHud ? ' vp--916-fullscreen' : ''} ${className}`.trim()}
       onMouseMove={resetHideTimer}
       onMouseLeave={() => { clearTimeout(hideTimer.current); setHover(false); setShowVol(false); setShowQual(false); }}
       onClick={tapToTogglePlay ? onSurfaceClick : undefined}
@@ -267,9 +272,10 @@ export default function VideoPlayer({
         {hover && (
           <motion.div
             className="vp__hud"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+            style={{ transformOrigin: '50% 100%' }}
+            initial={{ opacity: 0, scale: hudScale }}
+            animate={{ opacity: 1, scale: hudScale }}
+            exit={{ opacity: 0, scale: hudScale }}
             transition={{ duration: 0.2 }}
             onClick={tapToTogglePlay ? onHudOverlayClick : undefined}
           >
