@@ -15,10 +15,10 @@ function publicAiVideo(filename) {
 }
 
 const DEFAULT_ITEMS = [
-  { id: 'gracewide', code: '# 01', label: 'Grace wide', src: publicAiVideo('gracewide.mp4') },
-  { id: 'models', code: '# 02', label: 'Models', src: publicAiVideo('Models.mp4') },
-  { id: 'sunglasses', code: '# 03', label: 'Sunglasses', src: publicAiVideo('Sunglasses.mp4') },
-  { id: 'grace-door', code: '# 04', label: 'Grace door', src: publicAiVideo('GraceDoor.mp4') },
+  { id: 'models', code: '# 01', label: 'Models', src: publicAiVideo('Models.mp4'), expandAspect: '9/16' },
+  { id: 'gracewide', code: '# 02', label: 'Grace wide', src: publicAiVideo('gracewide.mp4') },
+  { id: 'grace-door', code: '# 03', label: 'Grace door', src: publicAiVideo('GraceDoor.mp4') },
+  { id: 'sunglasses', code: '# 04', label: 'Sunglasses', src: publicAiVideo('Sunglasses.mp4'), expandAspect: '9/16' },
 ];
 
 /* Slower, relaxed overlay fades (matches calmer strip width transition) */
@@ -30,7 +30,7 @@ export default function HoverExpandGallery({ items = DEFAULT_ITEMS }) {
   const [finePointer, setFinePointer] = useState(
     () => typeof window !== 'undefined' && window.matchMedia('(pointer: fine)').matches,
   );
-  const [active, setActive] = useState(1);
+  const [active, setActive] = useState(0);
   const transition = reduceMotion ? { duration: 0.01 } : easeStrip;
 
   useEffect(() => {
@@ -80,7 +80,7 @@ export default function HoverExpandGallery({ items = DEFAULT_ITEMS }) {
             return (
               <div
                 key={item.id}
-                className={`hover-expand-strip${isActive ? ' hover-expand-strip--active' : ''}`}
+                className={`hover-expand-strip${isActive ? ' hover-expand-strip--active' : ''}${item.expandAspect === '9/16' ? ' hover-expand-strip--expand-916' : ''}`}
                 role="listitem"
                 tabIndex={0}
                 onPointerEnter={() => activate(i)}

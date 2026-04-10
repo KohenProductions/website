@@ -1,14 +1,23 @@
 /* Hover-expand strip gallery — site palette; light band between dark team block and projects */
 
 .hover-expand-gallery {
+  --heg-scale: 1.25;
   --heg-text: #0d0d0d;
   --heg-muted: rgba(13, 13, 13, 0.42);
   --heg-border: rgba(0, 0, 0, 0.09);
   --heg-shadow: 0 12px 40px rgba(0, 0, 0, 0.06);
   /* Taller strip row (+~10% height vs prior), active width follows 16:9 */
-  --heg-row-h: clamp(11.1rem, 18.2vw, 16.2rem);
-  --heg-narrow: clamp(2.63rem, 4.87vw, 3.75rem);
-  /* Active strip width = exact 16:9 for row height — no letterboxing */
+  --heg-row-h: clamp(
+    calc(11.1rem * var(--heg-scale)),
+    calc(18.2vw * var(--heg-scale)),
+    calc(16.2rem * var(--heg-scale))
+  );
+  --heg-narrow: clamp(
+    calc(2.63rem * var(--heg-scale)),
+    calc(4.87vw * var(--heg-scale)),
+    calc(3.75rem * var(--heg-scale))
+  );
+  /* Active strip width = exact 16:9 for row height (some items override to 9:16) */
   --heg-active-w: calc(var(--heg-row-h) * 16 / 9);
   --heg-ease: cubic-bezier(0.22, 1, 0.36, 1);
   --heg-dur: 0.72s;
@@ -16,7 +25,7 @@
   position: relative;
   width: 100%;
   margin-top: 0;
-  padding: 3.08rem calc(1.5rem * 1.12) 2.8rem;
+  padding: calc(3.08rem * var(--heg-scale)) calc(1.5rem * 1.12 * var(--heg-scale)) calc(2.8rem * var(--heg-scale));
   box-sizing: border-box;
   background: var(--page-bg, #f8f8f6);
   color: var(--heg-text);
@@ -40,13 +49,13 @@
 }
 
 .hover-expand-head {
-  margin-bottom: calc(1.75rem * 1.12);
+  margin-bottom: calc(1.75rem * 1.12 * var(--heg-scale));
   text-align: center;
 }
 
 .hover-expand-label {
   display: block;
-  font-size: calc(0.65rem * 1.12);
+  font-size: calc(0.65rem * 1.12 * var(--heg-scale));
   font-weight: 600;
   letter-spacing: 0.22em;
   text-transform: uppercase;
@@ -56,7 +65,11 @@
 
 .hover-expand-title {
   margin: 0;
-  font-size: clamp(1.624rem, 3.584vw, 2.072rem);
+  font-size: clamp(
+    calc(1.624rem * var(--heg-scale)),
+    calc(3.584vw * var(--heg-scale)),
+    calc(2.072rem * var(--heg-scale))
+  );
   font-weight: 600;
   letter-spacing: -0.03em;
   line-height: 1.1;
@@ -77,7 +90,7 @@
   align-items: stretch;
   justify-content: flex-start;
   flex-shrink: 0;
-  gap: calc(0.35rem * 1.12);
+  gap: calc(0.35rem * 1.12 * var(--heg-scale));
   height: var(--heg-row-h);
   width: fit-content;
   max-width: 100%;
@@ -91,7 +104,7 @@
   width: var(--heg-narrow);
   height: 100%;
   min-height: 0;
-  border-radius: 0.5rem;
+  border-radius: calc(0.5rem * var(--heg-scale));
   overflow: hidden;
   cursor: pointer;
   box-shadow: var(--heg-shadow);
@@ -107,6 +120,11 @@
 /* Exact 16:9 width — strip fills edge-to-edge, row width is uneven / intrinsic */
 .hover-expand-strip--active {
   width: var(--heg-active-w);
+}
+
+/* Portrait 9:16 expansion (specific clips) — width = row height × 9/16 */
+.hover-expand-strip--active.hover-expand-strip--expand-916 {
+  width: calc(var(--heg-row-h) * 9 / 16);
 }
 
 .hover-expand-strip:focus-visible {
@@ -147,20 +165,20 @@
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-end;
-  gap: calc(0.35rem * 1.12);
-  padding: calc(1rem * 1.12) calc(1.1rem * 1.12);
+  gap: calc(0.35rem * 1.12 * var(--heg-scale));
+  padding: calc(1rem * 1.12 * var(--heg-scale)) calc(1.1rem * 1.12 * var(--heg-scale));
   pointer-events: none;
 }
 
 .hover-expand-code {
-  font-size: calc(0.7rem * 1.12);
+  font-size: calc(0.7rem * 1.12 * var(--heg-scale));
   font-weight: 600;
   letter-spacing: 0.12em;
   color: rgba(255, 255, 255, 0.55);
 }
 
 .hover-expand-strip-label {
-  font-size: calc(0.72rem * 1.12);
+  font-size: calc(0.72rem * 1.12 * var(--heg-scale));
   font-weight: 500;
   letter-spacing: 0.04em;
   color: rgba(255, 255, 255, 0.88);
@@ -168,8 +186,8 @@
 }
 
 .hover-expand-foot {
-  margin-top: calc(1.5rem * 1.12);
-  font-size: calc(0.65rem * 1.12);
+  margin-top: calc(1.5rem * 1.12 * var(--heg-scale));
+  font-size: calc(0.65rem * 1.12 * var(--heg-scale));
   letter-spacing: 0.04em;
   opacity: 0.38;
   text-align: center;
