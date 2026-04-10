@@ -67,9 +67,11 @@ export default function HoverExpandGallery({ items = DEFAULT_ITEMS }) {
   return (
     <section ref={sectionRef} className={rootClass} aria-labelledby="hover-expand-heading">
       <header className="hover-expand-head">
-        <span className="hover-expand-label">Gallery</span>
+        <span className="hover-expand-label hover-expand-label--tagline">
+          the next step of content creation
+        </span>
         <h3 id="hover-expand-heading" className="hover-expand-title">
-          Still selects
+          Ai Advertisments
         </h3>
       </header>
 
