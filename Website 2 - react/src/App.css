@@ -143,6 +143,30 @@ a { color: inherit; text-decoration: none; }
   opacity: 0.4;
 }
 
+.hero-square-wrap {
+  width: 100%;
+  max-width: 72rem;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 2.75rem;
+  display: flex;
+  justify-content: center;
+}
+
+/* Match hero 16:9 placeholder width; React Bits–style BorderGlow (border-glow) */
+.hero-border-glow {
+  width: 100%;
+  max-width: min(94vw, 50rem);
+}
+
+.hero-border-glow .border-glow-inner {
+  width: 100%;
+}
+
+.hero-text .explore-btn {
+  margin-top: 1.5rem;
+}
+
 .hero-scroll {
   position: absolute;
   bottom: 3rem;

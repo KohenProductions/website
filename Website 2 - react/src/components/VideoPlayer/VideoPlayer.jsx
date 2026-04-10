@@ -92,13 +92,28 @@ const IconExitFullscreen = () => (
   </svg>
 );
 
+function assetUrl(path) {
+  if (!path) return '';
+  const base = import.meta.env.BASE_URL || '/';
+  const root = base === '/' ? '' : base.replace(/\/$/, '');
+  const p = path.startsWith('/') ? path : `/${path}`;
+  return `${root}${p}`;
+}
+
 /* ── Main VideoPlayer ── */
-export default function VideoPlayer({ src, className = '' }) {
+export default function VideoPlayer({
+  src,
+  className = '',
+  placeholder = false,
+  placeholderSrc,
+  /** Click/tap anywhere on the video or photo surface toggles play/pause (HUD chrome still uses its own handlers). */
+  tapToTogglePlay = true,
+}) {
   const videoRef     = useRef(null);
   const containerRef = useRef(null);
   const mouseX       = useMotionValue(Infinity);
 
-  const [playing,    setPlaying]    = useState(true);
+  const [playing,    setPlaying]    = useState(() => !placeholder);
   const [muted,      setMuted]      = useState(true);
   const [volume,     setVolume]     = useState(1);
   const [progress,   setProgress]   = useState(0);
@@ -128,28 +143,41 @@ export default function VideoPlayer({ src, className = '' }) {
   }, []);
 
   const togglePlay = useCallback(() => {
+    if (placeholder) {
+      setPlaying(p => !p);
+      return;
+    }
     const v = videoRef.current;
     if (!v) return;
     if (v.paused) { v.play(); setPlaying(true); }
     else { v.pause(); setPlaying(false); }
-  }, []);
+  }, [placeholder]);
 
   const toggleMute = useCallback(() => {
+    if (placeholder) {
+      setMuted(m => !m);
+      return;
+    }
     const v = videoRef.current;
     if (!v) return;
     v.muted = !v.muted;
     setMuted(v.muted);
-  }, []);
+  }, [placeholder]);
 
   const setVol = useCallback((val) => {
+    const vol = Math.max(0, Math.min(1, val));
+    if (placeholder) {
+      setVolume(vol);
+      setMuted(vol === 0);
+      return;
+    }
     const v = videoRef.current;
     if (!v) return;
-    const vol = Math.max(0, Math.min(1, val));
     v.volume = vol;
     v.muted  = vol === 0;
     setVolume(vol);
     setMuted(vol === 0);
-  }, []);
+  }, [placeholder]);
 
   const toggleFullscreen = useCallback(() => {
     const el = containerRef.current;
@@ -169,11 +197,12 @@ export default function VideoPlayer({ src, className = '' }) {
   }, []);
 
   const scrub = useCallback((e) => {
+    if (placeholder) return;
     const v = videoRef.current;
-    if (!v) return;
+    if (!v || !v.duration) return;
     const rect = e.currentTarget.getBoundingClientRect();
     v.currentTime = ((e.clientX - rect.left) / rect.width) * v.duration;
-  }, []);
+  }, [placeholder]);
 
   const formatTime = (s) => {
     const m = Math.floor(s / 60);
@@ -181,22 +210,57 @@ export default function VideoPlayer({ src, className = '' }) {
     return `${m}:${sec.toString().padStart(2, '0')}`;
   };
 
+  const onSurfaceClick = useCallback(
+    e => {
+      if (!tapToTogglePlay) return;
+      togglePlay();
+      resetHideTimer();
+    },
+    [tapToTogglePlay, togglePlay, resetHideTimer],
+  );
+
+  const onHudOverlayClick = useCallback(
+    e => {
+      if (!tapToTogglePlay) return;
+      e.stopPropagation();
+      togglePlay();
+      resetHideTimer();
+    },
+    [tapToTogglePlay, togglePlay, resetHideTimer],
+  );
+
   return (
     <div
       ref={containerRef}
-      className={`vp ${className}`}
+      className={`vp${placeholder ? ' vp--placeholder' : ''} ${className}`.trim()}
       onMouseMove={resetHideTimer}
       onMouseLeave={() => { clearTimeout(hideTimer.current); setHover(false); setShowVol(false); setShowQual(false); }}
-      onClick={() => { togglePlay(); resetHideTimer(); }}
+      onClick={tapToTogglePlay ? onSurfaceClick : undefined}
     >
-      <video
-        ref={videoRef}
-        src={src}
-        autoPlay muted loop playsInline
-        onTimeUpdate={onTimeUpdate}
-        onLoadedMetadata={onLoadedMetadata}
-        className="vp__video"
-      />
+      {placeholder ? (
+        <div
+          className={`vp__placeholder-surface${placeholderSrc ? ' vp__placeholder-surface--photo' : ''}`}
+          aria-hidden
+          style={
+            placeholderSrc
+              ? {
+                  backgroundImage: `linear-gradient(180deg, rgba(0,0,0,0.12) 0%, transparent 45%), url(${assetUrl(placeholderSrc)})`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                }
+              : undefined
+          }
+        />
+      ) : (
+        <video
+          ref={videoRef}
+          src={src}
+          autoPlay muted loop playsInline
+          onTimeUpdate={onTimeUpdate}
+          onLoadedMetadata={onLoadedMetadata}
+          className="vp__video"
+        />
+      )}
 
       {/* HUD */}
       <AnimatePresence>
@@ -207,7 +271,7 @@ export default function VideoPlayer({ src, className = '' }) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            onClick={() => { togglePlay(); resetHideTimer(); }}
+            onClick={tapToTogglePlay ? onHudOverlayClick : undefined}
           >
             {/* Timeline */}
             <div className="vp__timeline-wrap" onClick={e => e.stopPropagation()}>

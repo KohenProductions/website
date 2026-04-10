@@ -72,6 +72,21 @@ export default function App() {
               className="hero-variable"
             />
           </h1>
+          <div className="hero-square-wrap">
+            <BorderGlow
+              className="hero-border-glow"
+              backgroundColor="transparent"
+              borderRadius={10}
+              glowRadius={28}
+              glowColor="270 80 75"
+              colors={['#a78bfa', '#818cf8', '#7dd3fc']}
+              fillOpacity={0.15}
+              glowIntensity={1.2}
+              edgeSensitivity={20}
+            >
+              <VideoPlayer placeholder placeholderSrc="/ron.jpg" />
+            </BorderGlow>
+          </div>
           <a href="#work" className="explore-btn">
             <span>explore projects</span>
             <svg className="explore-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">

@@ -7,6 +7,83 @@
   background: #000;
 }
 
+/* Hero / static placeholder — 16:9 silver slab + same HUD chrome */
+.vp.vp--placeholder {
+  aspect-ratio: 16 / 9;
+  max-width: min(94vw, 50rem);
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 10px;
+  background: #1a1a1c;
+  box-shadow:
+    0 10px 40px rgba(0, 0, 0, 0.14),
+    0 2px 8px rgba(0, 0, 0, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.45),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.08);
+}
+
+.vp__placeholder-surface {
+  position: absolute;
+  inset: 0;
+  border-radius: 10px;
+  overflow: hidden;
+  background: linear-gradient(
+    152deg,
+    #e2e2e6 0%,
+    #b0b0b8 32%,
+    #c8c8d0 52%,
+    #909098 100%
+  );
+}
+
+/* Top light / bottom shade — depth on the silver */
+.vp__placeholder-surface::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    165deg,
+    rgba(255, 255, 255, 0.55) 0%,
+    rgba(255, 255, 255, 0.08) 38%,
+    transparent 52%
+  );
+  pointer-events: none;
+}
+
+.vp__placeholder-surface::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.22) 0%,
+    rgba(0, 0, 0, 0.06) 35%,
+    transparent 58%
+  );
+  pointer-events: none;
+}
+
+/* Reference photo — lighter sheen so the image stays visible */
+.vp__placeholder-surface--photo::before {
+  background: linear-gradient(
+    165deg,
+    rgba(255, 255, 255, 0.22) 0%,
+    rgba(255, 255, 255, 0.05) 40%,
+    transparent 55%
+  );
+}
+
+.vp__placeholder-surface--photo::after {
+  background: linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.28) 0%,
+    rgba(0, 0, 0, 0.08) 38%,
+    transparent 60%
+  );
+}
+
 /* Portrait variant — used in Bettercare grid */
 .vp--portrait {
   aspect-ratio: 4 / 5;
