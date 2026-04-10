@@ -6,16 +6,16 @@
   --heg-muted: rgba(13, 13, 13, 0.42);
   --heg-border: rgba(0, 0, 0, 0.09);
   --heg-shadow: 0 12px 40px rgba(0, 0, 0, 0.06);
-  /* Taller strip row (+~10% height vs prior), active width follows 16:9 */
+  /* Strip row height — bumped ~12% for a taller gallery block; active 16:9 width follows row-h */
   --heg-row-h: clamp(
-    calc(11.1rem * var(--heg-scale)),
-    calc(18.2vw * var(--heg-scale)),
-    calc(16.2rem * var(--heg-scale))
+    calc(12.4rem * var(--heg-scale)),
+    calc(20.4vw * var(--heg-scale)),
+    calc(18.1rem * var(--heg-scale))
   );
   --heg-narrow: clamp(
-    calc(2.63rem * var(--heg-scale)),
-    calc(4.87vw * var(--heg-scale)),
-    calc(3.75rem * var(--heg-scale))
+    calc(2.95rem * var(--heg-scale)),
+    calc(5.45vw * var(--heg-scale)),
+    calc(4.2rem * var(--heg-scale))
   );
   /* Active strip width = exact 16:9 for row height (some items override to 9:16) */
   --heg-active-w: calc(var(--heg-row-h) * 16 / 9);
@@ -25,23 +25,17 @@
   position: relative;
   width: 100%;
   margin-top: 0;
-  padding: calc(3.08rem * var(--heg-scale)) calc(1.5rem * 1.12 * var(--heg-scale)) calc(2.8rem * var(--heg-scale));
+  padding: calc(3.35rem * var(--heg-scale)) calc(1.05rem * 1.12 * var(--heg-scale)) calc(3.05rem * var(--heg-scale));
   box-sizing: border-box;
   background: var(--page-bg, #f8f8f6);
   color: var(--heg-text);
 }
 
-/* Drawing trail (fine pointer only): hide system cursor inside section */
-.hover-expand-gallery--drawing-cursor,
-.hover-expand-gallery--drawing-cursor * {
-  cursor: none !important;
-}
-
-/* Gallery block + header + attribution — 12% wider than prior 75% band */
+/* Gallery block + header + attribution — wide band so expanded 16:9 row often fits without inner scroll */
 .hover-expand-head,
 .hover-expand-scroll,
 .hover-expand-foot {
-  width: 84%;
+  width: 97%;
   max-width: 100%;
   margin-left: auto;
   margin-right: auto;
@@ -88,10 +82,12 @@
 .hover-expand-scroll {
   display: flex;
   justify-content: center;
+  /* Horizontal scroll: row wider than track when a 16:9 strip expands — avoids scale/fit fighting width transition */
   overflow-x: auto;
   overflow-y: visible;
   -webkit-overflow-scrolling: touch;
   padding-bottom: 0.25rem;
+  scrollbar-gutter: stable;
 }
 
 .hover-expand-row {

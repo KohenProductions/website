@@ -36,23 +36,42 @@ body {
 
 a { color: inherit; text-decoration: none; }
 
-/* ── Nav ── */
+/* ── Nav — floating pill (shape / stroke inspired by riseup.co.il) ── */
 .nav {
   position: fixed;
-  top: 0; left: 0; right: 0;
+  top: 0;
+  left: 0;
+  right: 0;
   z-index: 100;
+  padding: 0.85rem 1rem 0;
+  background: none;
+  border: none;
+  pointer-events: none;
+}
+
+.nav-shell {
+  max-width: min(72rem, calc(100vw - 2rem));
+  margin: 0 auto;
+  pointer-events: auto;
+}
+
+.nav-pill {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.4rem 2rem;
-  /* Full-width bar: logo/links above; scroll content passes underneath */
-  background: rgba(248, 248, 246, 0.5);
-  border-bottom: 1px solid rgba(180, 180, 180, 0.5);
-  backdrop-filter: blur(14px) saturate(1.05);
-  -webkit-backdrop-filter: blur(14px) saturate(1.05);
+  gap: 0.75rem 1rem;
+  min-height: 3.5rem;
+  padding: 0.5rem 1.1rem 0.5rem 1.25rem;
+  background: #fff;
+  border: 1px solid rgba(13, 13, 13, 0.12);
+  border-radius: 9999px;
+  box-shadow:
+    0 4px 28px rgba(0, 0, 0, 0.07),
+    0 1px 2px rgba(0, 0, 0, 0.04);
 }
 
 .nav-logo {
+  flex-shrink: 0;
   font-size: 0.875rem;
   font-weight: 600;
   letter-spacing: -0.02em;
@@ -62,20 +81,113 @@ a { color: inherit; text-decoration: none; }
 
 .nav-links {
   display: flex;
-  gap: 1.75rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.1rem 1.5rem;
   list-style: none;
+  margin: 0;
+  padding: 0 0.5rem;
+  flex: 1;
+  min-width: 0;
 }
 
 .nav-links a {
-  font-size: 0.7rem;
+  font-size: 0.68rem;
   font-weight: 500;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   opacity: 0.5;
   transition: opacity 0.2s;
+  white-space: nowrap;
 }
 
 .nav-links a:hover { opacity: 1; }
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  flex-shrink: 0;
+}
+
+/* React Bits Magnet wrapper — flex child in pill nav */
+.nav-magnet {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+/* React Bits FadeContent around HoverExpandGallery */
+.heg-fade-wrap {
+  width: 100%;
+}
+
+.nav-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.48rem 1rem;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  border-radius: 9999px;
+  border: 1px solid transparent;
+  transition: background 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
+  white-space: nowrap;
+}
+
+.nav-btn--ghost {
+  background: transparent;
+  color: #1d4ed8;
+  border-color: #1d4ed8;
+}
+
+.nav-btn--ghost:hover {
+  background: rgba(29, 78, 216, 0.06);
+}
+
+.nav-btn--primary {
+  background: #1d4ed8;
+  color: #fff;
+  border-color: #1d4ed8;
+}
+
+.nav-btn--primary:hover {
+  background: #1e40af;
+  border-color: #1e40af;
+}
+
+@media (max-width: 52rem) {
+  .nav-pill {
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 0.65rem 1rem;
+    border-radius: 1.5rem;
+  }
+
+  .nav-links {
+    order: 3;
+    width: 100%;
+    flex: none;
+    padding: 0.35rem 0 0;
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+  }
+
+  .nav-actions {
+    margin-left: auto;
+  }
+}
+
+@media (max-width: 28rem) {
+  .nav-actions {
+    width: 100%;
+    justify-content: stretch;
+  }
+
+  .nav-btn {
+    flex: 1;
+  }
+}
 
 /* ── Hero ── */
 .hero {
@@ -83,8 +195,14 @@ a { color: inherit; text-decoration: none; }
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  padding: 3.85rem 3rem 5rem;
+  /* Extra top space for floating pill nav */
+  padding: 4.75rem 3rem 5rem;
   position: relative;
+}
+
+/* Space below fixed nav, only for hero copy — does not affect other sections */
+.hero-text {
+  padding-top: 0.85rem;
 }
 
 /* Explore button */
@@ -125,6 +243,8 @@ a { color: inherit; text-decoration: none; }
   letter-spacing: -0.04em;
   line-height: 1;
   font-family: 'Inter', system-ui, sans-serif;
+  /* Slight pull so huge type doesn’t sit too far below kicker; keep a modest gap */
+  margin-top: -0.05em;
 }
 
 .hero-variable {
@@ -136,11 +256,12 @@ a { color: inherit; text-decoration: none; }
 
 .hero-sub {
   margin-top: 0;
-  margin-bottom: 1.2rem;
+  margin-bottom: 0.65rem;
   font-size: 0.85rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   opacity: 0.4;
+  line-height: 1.25;
 }
 
 .hero-square-wrap {
@@ -308,6 +429,14 @@ a { color: inherit; text-decoration: none; }
 /* Karl block: slightly tighter rhythm before the card stack */
 .project-feature--karl-stack {
   gap: 1.1rem;
+}
+
+/* Karl hero video — scaled down from full row, centered */
+.project-feature--karl-stack .border-glow-card {
+  width: 75%;
+  max-width: 75%;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .project-feature-header {

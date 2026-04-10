@@ -4,7 +4,9 @@ import VideoPlayer from './components/VideoPlayer/VideoPlayer';
 import VariableProximity from './components/VariableProximity/VariableProximity';
 import BorderGlow from './components/BorderGlow/BorderGlow';
 import Skiper16Stack from './components/Skiper16Stack/Skiper16Stack';
+import FadeContent from './components/FadeContent/FadeContent';
 import HoverExpandGallery from './components/HoverExpandGallery/HoverExpandGallery';
+import Magnet from './components/Magnet/Magnet';
 import HoverExpandShowcase, { FASHION_HOVER_EXPAND_ITEMS } from './components/HoverExpandShowcase/HoverExpandShowcase';
 import Aurora from './components/Aurora/Aurora';
 import './App.css';
@@ -47,14 +49,25 @@ export default function App() {
         />
       </div>
 
-      {/* ── Nav ── */}
-      <nav className="nav">
-        <a href="#" className="nav-logo">Ron<span>.</span>Kohen</a>
-        <ul className="nav-links">
-          <li><a href="#work">Work</a></li>
-          <li><a href="#about">About</a></li>
-          <li><a href="#contact">Contact</a></li>
-        </ul>
+      {/* ── Nav (floating pill — Riseup-style: inset, stroke, soft shadow) ── */}
+      <nav className="nav" aria-label="Primary">
+        <div className="nav-shell">
+          <div className="nav-pill">
+            <a href="#" className="nav-logo">Ron<span>.</span>Kohen</a>
+            <ul className="nav-links">
+              <li><a href="#work">Work</a></li>
+              <li><a href="#about">About</a></li>
+              <li><a href="#contact">Contact</a></li>
+            </ul>
+            <div className="nav-actions">
+              <Magnet padding={96} magnetStrength={2.5} wrapperClassName="nav-magnet">
+                <a href="#contact" className="nav-btn nav-btn--primary">
+                  Pricing
+                </a>
+              </Magnet>
+            </div>
+          </div>
+        </div>
       </nav>
 
       {/* ── Hero ── */}
@@ -150,7 +163,9 @@ export default function App() {
           />
         </div>
 
-        <HoverExpandGallery />
+        <FadeContent className="heg-fade-wrap" duration={0.85} threshold={0.14}>
+          <HoverExpandGallery />
+        </FadeContent>
 
         {/* 2 — Bettercare — 4-video grid */}
         <div className="project-feature">

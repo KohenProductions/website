@@ -29,3 +29,7 @@ dist-ssr
 # Over GitHub size limits — keep locally or host elsewhere / Git LFS
 public/bettercare/Bettercare - ai.mp4
 public/karl studio/frames/card3a.gif
+
+# Large GIF exports / Photoshop sources (not wired in app; avoid huge commits)
+public/gif/
+public/karl studio/**/*.psd

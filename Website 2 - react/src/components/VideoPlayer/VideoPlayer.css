@@ -149,6 +149,11 @@
   padding: 0 1rem 0.4rem;
 }
 
+.vp__timeline-wrap > .slider-container {
+  flex: 1;
+  min-width: 0;
+}
+
 .vp__time {
   font-size: 0.7rem;
   color: rgba(255,255,255,0.7);
@@ -157,61 +162,42 @@
   user-select: none;
 }
 
-.vp__timeline {
+/* Elastic Slider timeline (React Bits track + time ends) */
+.vp__elastic-timeline .slider-wrapper {
+  gap: 0.55rem;
+  width: 100%;
+}
+
+.vp__elastic-timeline .slider-root {
+  max-width: none;
   flex: 1;
-  height: 3px;
-  background: rgba(255,255,255,0.25);
+  min-width: 0;
+  padding: 0.55rem 0;
+  overflow: hidden;
+  border-radius: 3px;
+}
+
+.vp__elastic-timeline .slider-track {
   border-radius: 2px;
-  cursor: pointer;
-  position: relative;
-  transition: height 0.15s;
+  background-color: rgba(255, 255, 255, 0.25);
+  min-height: 3px;
 }
 
-.vp__timeline::before {
-  content: '';
-  position: absolute;
-  top: -8px;
-  bottom: -8px;
-  left: 0;
-  right: 0;
-}
-
-.vp__timeline:hover {
-  height: 5px;
-}
-
-.vp__timeline-buf {
-  position: absolute;
-  inset: 0;
-  background: rgba(255,255,255,0.15);
+.vp__elastic-timeline .slider-range {
   border-radius: 2px;
+  background-color: #fff;
 }
 
-.vp__timeline-fill {
-  position: absolute;
-  left: 0; top: 0; bottom: 0;
+/* Bold playhead — current position on timeline */
+.vp__elastic-timeline .slider-progress-thumb {
+  width: 5px;
+  height: 16px;
+  border-radius: 3px;
   background: #fff;
-  border-radius: 2px;
-  pointer-events: none;
-}
-
-.vp__timeline-thumb {
-  position: absolute;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  width: 13px;
-  height: 13px;
-  background: #fff;
-  border-radius: 50%;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.12s, transform 0.12s;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.5);
-}
-
-.vp__timeline:hover .vp__timeline-thumb {
-  opacity: 1;
-  transform: translate(-50%, -50%) scale(1.15);
+  border: 1px solid rgba(0, 0, 0, 0.35);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.4) inset,
+    0 2px 8px rgba(0, 0, 0, 0.45);
 }
 
 /* ── Dock bar ── */
@@ -322,55 +308,106 @@
   opacity: 0.6;
 }
 
-/* Volume slider */
+/* Volume — React Bits Elastic Slider */
 .vp__vol-slider-wrap {
-  padding: 0.3rem 0.6rem 0.4rem;
+  padding: 0.35rem 0.55rem 0.45rem;
 }
 
-.vp__vol-slider {
+.vp__vol-slider-wrap .slider-container {
   width: 100%;
-  appearance: none;
-  -webkit-appearance: none;
-  height: 3px;
-  background: transparent;
-  border-radius: 2px;
-  outline: none;
-  cursor: pointer;
+  gap: 0;
 }
 
-.vp__vol-slider::-webkit-slider-runnable-track {
-  height: 3px;
-  background: #fff;
-  border-radius: 2px;
+.vp__vol-slider-wrap .slider-wrapper {
+  gap: 0.45rem;
 }
 
-.vp__vol-slider::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  margin-top: -4.5px;
+.vp__vol-slider-wrap .slider-root {
+  max-width: none;
+  flex: 1;
+  padding: 0.35rem 0;
+}
+
+.vp__vol-slider-wrap .icon {
+  width: 14px;
+  height: 14px;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.vp__vol-slider-wrap .slider-track {
+  background-color: rgba(255, 255, 255, 0.28);
+}
+
+.vp__vol-slider-wrap .slider-range {
+  background-color: #fff;
+}
+
+/* ── Compact HUD (9:16 strips in HoverExpandGallery) — not applied to 16:9 players ── */
+.vp--compact-hud .vp__hud {
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.9) 0%,
+    rgba(0, 0, 0, 0.55) 28%,
+    rgba(0, 0, 0, 0.28) 52%,
+    rgba(0, 0, 0, 0.12) 78%,
+    rgba(0, 0, 0, 0.04) 100%
+  );
+  box-sizing: border-box;
+  padding: 0;
+}
+
+.vp--compact-hud .vp-btn svg {
   width: 12px;
   height: 12px;
-  border-radius: 50%;
-  background: #fff;
-  cursor: pointer;
 }
 
-.vp__vol-slider::-moz-range-track {
-  height: 3px;
-  background: #fff;
-  border-radius: 2px;
-  border: none;
+.vp__timeline-wrap--compact {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.32rem;
+  padding: 0 0.55rem 0.38rem;
 }
 
-.vp__vol-slider::-moz-range-progress {
-  background: #fff;
-  border-radius: 2px;
+.vp__timeline-wrap--compact .vp__time--range {
+  font-size: 0.62rem;
+  letter-spacing: 0.03em;
+  color: rgba(255, 255, 255, 0.82);
 }
 
-.vp__vol-slider::-moz-range-thumb {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: #fff;
-  border: none;
-  cursor: pointer;
+.vp__time-sep {
+  margin: 0 0.28em;
+  opacity: 0.45;
+  font-weight: 400;
+}
+
+.vp__timeline-wrap--compact > .slider-container {
+  flex: none;
+  width: 100%;
+  min-width: 0;
+}
+
+.vp__timeline-wrap--compact .vp__elastic-timeline .slider-wrapper--only-track {
+  width: 100%;
+}
+
+.vp--compact-hud .vp__dock {
+  justify-content: space-between;
+  gap: 0.28rem;
+  padding: 0 0.42rem 0.5rem;
+}
+
+.vp--compact-hud .vp-btn {
+  border-radius: 7px;
+}
+
+.vp--compact-hud .vp__popover-wrap:first-of-type .vp__popover {
+  left: 0;
+  right: auto;
+  transform: none;
+}
+
+.vp--compact-hud .vp-tooltip {
+  font-size: 0.6rem;
+  padding: 0.18rem 0.42rem;
 }

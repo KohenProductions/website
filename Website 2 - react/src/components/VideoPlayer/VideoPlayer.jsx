@@ -1,5 +1,6 @@
 import { useRef, useState, useCallback, useEffect } from 'react';
-import { motion, useMotionValue, useSpring, useTransform, AnimatePresence } from 'motion/react';
+import { motion as Motion, useMotionValue, useSpring, useTransform, AnimatePresence } from 'motion/react';
+import ElasticSlider from '../ElasticSlider/ElasticSlider';
 import './VideoPlayer.css';
 
 const SPRING = { mass: 0.1, stiffness: 150, damping: 12 };
@@ -10,14 +11,17 @@ const DIST   = 120;
 const QUALITIES = ['Auto', '1080p', '720p', '480p', '360p'];
 
 /* ── Magnified dock button ── */
-function DockBtn({ mouseX, label, children, onClick, active = false, tipAlign = 'center' }) {
+function DockBtn({ mouseX, dockScale = 1, label, children, onClick, active = false, tipAlign = 'center' }) {
   const ref = useRef(null);
+  const base = BASE * dockScale;
+  const mag = MAG * dockScale;
+  const dist = DIST * dockScale;
 
   const mouseDistance = useTransform(mouseX, val => {
-    const rect = ref.current?.getBoundingClientRect() ?? { x: 0, width: BASE };
-    return val - rect.x - BASE / 2;
+    const rect = ref.current?.getBoundingClientRect() ?? { x: 0, width: base };
+    return val - rect.x - base / 2;
   });
-  const targetSize = useTransform(mouseDistance, [-DIST, 0, DIST], [BASE, MAG, BASE]);
+  const targetSize = useTransform(mouseDistance, [-dist, 0, dist], [base, mag, base]);
   const size = useSpring(targetSize, SPRING);
   const [hovered, setHovered] = useState(false);
 
@@ -27,7 +31,7 @@ function DockBtn({ mouseX, label, children, onClick, active = false, tipAlign = 
     {};
 
   return (
-    <motion.button
+    <Motion.button
       ref={ref}
       className={`vp-btn ${active ? 'vp-btn--active' : ''}`}
       style={{ width: size, height: size }}
@@ -39,7 +43,7 @@ function DockBtn({ mouseX, label, children, onClick, active = false, tipAlign = 
       {children}
       <AnimatePresence>
         {hovered && (
-          <motion.span
+          <Motion.span
             className="vp-tooltip"
             style={tipStyle}
             initial={{ opacity: 0, y: 4 }}
@@ -48,10 +52,10 @@ function DockBtn({ mouseX, label, children, onClick, active = false, tipAlign = 
             transition={{ duration: 0.15 }}
           >
             {label}
-          </motion.span>
+          </Motion.span>
         )}
       </AnimatePresence>
-    </motion.button>
+    </Motion.button>
   );
 }
 
@@ -118,7 +122,6 @@ export default function VideoPlayer({
   const [playing,    setPlaying]    = useState(() => !placeholder);
   const [muted,      setMuted]      = useState(true);
   const [volume,     setVolume]     = useState(1);
-  const [progress,   setProgress]   = useState(0);
   const [hover,      setHover]      = useState(false);
   const [quality,    setQuality]    = useState('Auto');
   const [showVol,    setShowVol]    = useState(false);
@@ -191,20 +194,23 @@ export default function VideoPlayer({
     const v = videoRef.current;
     if (!v || !v.duration) return;
     setCurrent(v.currentTime);
-    setProgress(v.currentTime / v.duration);
   }, []);
 
   const onLoadedMetadata = useCallback(() => {
     setDuration(videoRef.current?.duration ?? 0);
   }, []);
 
-  const scrub = useCallback((e) => {
-    if (placeholder) return;
-    const v = videoRef.current;
-    if (!v || !v.duration) return;
-    const rect = e.currentTarget.getBoundingClientRect();
-    v.currentTime = ((e.clientX - rect.left) / rect.width) * v.duration;
-  }, [placeholder]);
+  const scrubToPercent = useCallback(
+    pct => {
+      if (placeholder) return;
+      const v = videoRef.current;
+      if (!v || !v.duration) return;
+      const t = (pct / 100) * v.duration;
+      v.currentTime = t;
+      setCurrent(t);
+    },
+    [placeholder],
+  );
 
   const formatTime = (s) => {
     const m = Math.floor(s / 60);
@@ -213,7 +219,7 @@ export default function VideoPlayer({
   };
 
   const onSurfaceClick = useCallback(
-    e => {
+    () => {
       if (!tapToTogglePlay) return;
       togglePlay();
       resetHideTimer();
@@ -231,13 +237,14 @@ export default function VideoPlayer({
     [tapToTogglePlay, togglePlay, resetHideTimer],
   );
 
-  /* Portrait strip vs 16:9 width ratio ≈ 0.32; sqrt ≈ 0.57 — use 0.62 for legible compact HUD */
-  const hudScale = compactHud ? 0.62 : 1;
+  const hudScale = 1;
+  /** HoverExpandGallery 9:16 tiles — dock controls 25% smaller than default. */
+  const dockScale = compactHud ? 0.75 : 1;
 
   return (
     <div
       ref={containerRef}
-      className={`vp${placeholder ? ' vp--placeholder' : ''}${compactHud ? ' vp--916-fullscreen' : ''} ${className}`.trim()}
+      className={`vp${placeholder ? ' vp--placeholder' : ''}${compactHud ? ' vp--916-fullscreen vp--compact-hud' : ''} ${className}`.trim()}
       onMouseMove={resetHideTimer}
       onMouseLeave={() => { clearTimeout(hideTimer.current); setHover(false); setShowVol(false); setShowQual(false); }}
       onClick={tapToTogglePlay ? onSurfaceClick : undefined}
@@ -270,7 +277,7 @@ export default function VideoPlayer({
       {/* HUD */}
       <AnimatePresence>
         {hover && (
-          <motion.div
+          <Motion.div
             className="vp__hud"
             style={{ transformOrigin: '50% 100%' }}
             initial={{ opacity: 0, scale: hudScale }}
@@ -280,20 +287,38 @@ export default function VideoPlayer({
             onClick={tapToTogglePlay ? onHudOverlayClick : undefined}
           >
             {/* Timeline */}
-            <div className="vp__timeline-wrap" onClick={e => e.stopPropagation()}>
-              <span className="vp__time">{formatTime(current)}</span>
-              <div className="vp__timeline" onClick={scrub}>
-                <div className="vp__timeline-buf" />
-                <motion.div
-                  className="vp__timeline-fill"
-                  style={{ width: `${progress * 100}%` }}
-                />
-                <motion.div
-                  className="vp__timeline-thumb"
-                  style={{ left: `${progress * 100}%` }}
-                />
-              </div>
-              <span className="vp__time">{formatTime(duration)}</span>
+            <div
+              className={`vp__timeline-wrap${compactHud ? ' vp__timeline-wrap--compact' : ''}`}
+              onClick={e => e.stopPropagation()}
+            >
+              {compactHud ? (
+                <span className="vp__time vp__time--range">
+                  {formatTime(current)}
+                  <span className="vp__time-sep">/</span>
+                  {formatTime(duration)}
+                </span>
+              ) : null}
+              <ElasticSlider
+                className="vp__elastic-timeline"
+                showValue={false}
+                hoverMagnify={false}
+                showProgressThumb
+                onlyTrack={compactHud}
+                startingValue={0}
+                maxValue={100}
+                value={duration > 0 ? (current / duration) * 100 : 0}
+                onValueChange={scrubToPercent}
+                leftSlot={
+                  compactHud
+                    ? undefined
+                    : <span className="vp__time">{formatTime(current)}</span>
+                }
+                rightSlot={
+                  compactHud
+                    ? undefined
+                    : <span className="vp__time">{formatTime(duration)}</span>
+                }
+              />
             </div>
 
             {/* Dock bar */}
@@ -304,18 +329,18 @@ export default function VideoPlayer({
               onClick={e => e.stopPropagation()}
             >
               {/* Play / Pause */}
-              <DockBtn mouseX={mouseX} label={playing ? 'Pause' : 'Play'} onClick={togglePlay}>
+              <DockBtn mouseX={mouseX} dockScale={dockScale} label={playing ? 'Pause' : 'Play'} onClick={togglePlay}>
                 {playing ? <IconPause /> : <IconPlay />}
               </DockBtn>
 
               {/* Volume */}
               <div className="vp__popover-wrap">
-                <DockBtn mouseX={mouseX} label="Volume" onClick={e => { e.stopPropagation(); if (muted) setVol(1); else setVol(0); setShowVol(v => !v); setShowQual(false); }}>
+                <DockBtn mouseX={mouseX} dockScale={dockScale} label="Volume" onClick={e => { e.stopPropagation(); if (muted) setVol(1); else setVol(0); setShowVol(v => !v); setShowQual(false); }}>
                   {muted ? <IconMute /> : <IconVolume />}
                 </DockBtn>
                 <AnimatePresence>
                   {showVol && (
-                    <motion.div
+                    <Motion.div
                       className="vp__popover"
                       initial={{ opacity: 0, y: 8 }}
                       animate={{ opacity: 1, y: 0 }}
@@ -328,14 +353,15 @@ export default function VideoPlayer({
                         <span>{muted ? 'Unmute' : 'Mute'}</span>
                       </button>
                       <div className="vp__vol-slider-wrap">
-                        <input
-                          type="range" min="0" max="1" step="0.01"
-                          value={muted ? 0 : volume}
-                          onChange={e => setVol(parseFloat(e.target.value))}
-                          className="vp__vol-slider"
+                        <ElasticSlider
+                          showValue={false}
+                          startingValue={0}
+                          maxValue={100}
+                          value={(muted ? 0 : volume) * 100}
+                          onValueChange={v => setVol(v / 100)}
                         />
                       </div>
-                    </motion.div>
+                    </Motion.div>
                   )}
                 </AnimatePresence>
               </div>
@@ -343,42 +369,44 @@ export default function VideoPlayer({
               {/* Spacer */}
               <div style={{ flex: 1 }} />
 
-              {/* Quality */}
-              <div className="vp__popover-wrap">
-                <DockBtn mouseX={mouseX} label="Quality" tipAlign="right" onClick={e => { e.stopPropagation(); setShowQual(v => !v); setShowVol(false); }}>
-                  <IconQuality />
-                </DockBtn>
-                <AnimatePresence>
-                  {showQual && (
-                    <motion.div
-                      className="vp__popover vp__popover--right"
-                      initial={{ opacity: 0, y: 8 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: 8 }}
-                      transition={{ duration: 0.15 }}
-                      onClick={e => e.stopPropagation()}
-                    >
-                      {QUALITIES.map(q => (
-                        <button
-                          key={q}
-                          className={`vp__pop-row ${quality === q ? 'vp__pop-row--active' : ''}`}
-                          onClick={() => { setQuality(q); setShowQual(false); }}
-                        >
-                          {q}
-                          {quality === q && <span className="vp__check">✓</span>}
-                        </button>
-                      ))}
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
+              {/* Quality — omitted on narrow 9:16 strips to keep dock balanced */}
+              {!compactHud && (
+                <div className="vp__popover-wrap">
+                  <DockBtn mouseX={mouseX} dockScale={dockScale} label="Quality" tipAlign="right" onClick={e => { e.stopPropagation(); setShowQual(v => !v); setShowVol(false); }}>
+                    <IconQuality />
+                  </DockBtn>
+                  <AnimatePresence>
+                    {showQual && (
+                      <Motion.div
+                        className="vp__popover vp__popover--right"
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 8 }}
+                        transition={{ duration: 0.15 }}
+                        onClick={e => e.stopPropagation()}
+                      >
+                        {QUALITIES.map(q => (
+                          <button
+                            key={q}
+                            className={`vp__pop-row ${quality === q ? 'vp__pop-row--active' : ''}`}
+                            onClick={() => { setQuality(q); setShowQual(false); }}
+                          >
+                            {q}
+                            {quality === q && <span className="vp__check">✓</span>}
+                          </button>
+                        ))}
+                      </Motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              )}
 
               {/* Fullscreen */}
-              <DockBtn mouseX={mouseX} label={fullscreen ? 'Exit Fullscreen' : 'Fullscreen'} tipAlign="right" onClick={toggleFullscreen}>
+              <DockBtn mouseX={mouseX} dockScale={dockScale} label={fullscreen ? 'Exit Fullscreen' : 'Fullscreen'} tipAlign="right" onClick={toggleFullscreen}>
                 {fullscreen ? <IconExitFullscreen /> : <IconFullscreen />}
               </DockBtn>
             </div>
-          </motion.div>
+          </Motion.div>
         )}
       </AnimatePresence>
     </div>

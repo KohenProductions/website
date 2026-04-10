@@ -1,5 +1,5 @@
 import { useRef, useState, useCallback, Fragment } from 'react';
-import { motion, useScroll, useTransform } from 'motion/react';
+import { motion as Motion, useScroll, useTransform } from 'motion/react';
 import VideoPlayer from '../VideoPlayer/VideoPlayer';
 import './Skiper16Stack.css';
 
@@ -16,6 +16,9 @@ function card1GalleryFrameUrl(letter) {
 }
 
 const CARD1_GALLERY_FRAMES = ['a', 'b', 'c', 'd', 'e', 'f'].map(card1GalleryFrameUrl);
+
+/** One word per gallery frame (a→f), by order; 6th frame cycles to first word. */
+const CARD1_FRAME_WORDS = ['Visual', 'Tone', 'Story', 'Direction', 'Style'];
 
 /** `public/karl studio/frames/card3a.gif` */
 function card3GifUrl() {
@@ -45,12 +48,35 @@ function publicRootPath(path) {
 
 const CARD4_VIDEO_SRC = publicRootPath('/bar.mp4');
 
+/** `public/frames/card5-2.jpg` — 9:16 media, card 5 split layout (right) */
+const CARD5_FRAME_SRC = publicRootPath('/frames/card5-2.jpg');
+
 const CARDS = [
-  { title: 'Karl Studio', kicker: 'Brand film', gradient: 'linear-gradient(145deg, #1e1b4b 0%, #312e81 40%, #0f172a 100%)' },
-  { title: 'Direction', kicker: 'Process', gradient: 'linear-gradient(145deg, #0c4a6e 0%, #164e63 50%, #0f172a 100%)' },
-  { title: 'Craft', kicker: 'Production', gradient: 'linear-gradient(145deg, #4c1d95 0%, #5b21b6 45%, #1e1b4b 100%)' },
-  { title: 'Motion', kicker: 'Edit & grade', gradient: 'linear-gradient(145deg, #831843 0%, #9d174d 40%, #1c1917 100%)' },
-  { title: 'Delivery', kicker: 'Every format', gradient: 'linear-gradient(145deg, #14532d 0%, #166534 40%, #0f172a 100%)' },
+  {
+    title: 'Ideas that set everything in motion',
+    kicker: 'Concept',
+    gradient: 'linear-gradient(145deg, #1e1b4b 0%, #312e81 40%, #0f172a 100%)',
+  },
+  {
+    title: 'Planning every detail before we roll',
+    kicker: 'Pre-production',
+    gradient: 'linear-gradient(145deg, #0c4a6e 0%, #164e63 50%, #0f172a 100%)',
+  },
+  {
+    title: 'Where everything comes to life',
+    kicker: 'Production',
+    gradient: 'linear-gradient(145deg, #4c1d95 0%, #5b21b6 45%, #1e1b4b 100%)',
+  },
+  {
+    title: 'Shaping the story, frame by frame',
+    kicker: 'Edit',
+    gradient: 'linear-gradient(145deg, #831843 0%, #9d174d 40%, #1c1917 100%)',
+  },
+  {
+    title: 'Ready to launch, anywhere',
+    kicker: 'Delivery',
+    gradient: 'linear-gradient(145deg, #14532d 0%, #166534 40%, #0f172a 100%)',
+  },
 ];
 
 /** Stack scroll p where all card scales are finished (t = n); remaining p scrolls at final state. */
@@ -112,6 +138,7 @@ function Card1GalleryVisual({ frames, fallbackGradient }) {
 
   const src = len ? frames[idx] : '';
   const imgBroken = Boolean(src && failed[src]);
+  const frameWord = CARD1_FRAME_WORDS[idx % CARD1_FRAME_WORDS.length];
 
   return (
     <div
@@ -119,7 +146,7 @@ function Card1GalleryVisual({ frames, fallbackGradient }) {
       style={{ background: fallbackGradient }}
       role="region"
       aria-roledescription="carousel"
-      aria-label="Karl Studio frames"
+      aria-label={`Concept frames, ${frameWord}`}
     >
       {src && !imgBroken ? (
         <img
@@ -132,6 +159,11 @@ function Card1GalleryVisual({ frames, fallbackGradient }) {
           draggable={false}
           onError={() => setFailed(f => (f[src] ? f : { ...f, [src]: true }))}
         />
+      ) : null}
+      {src && !imgBroken ? (
+        <p className="skiper16-gallery-frame-word" aria-live="polite">
+          {frameWord}
+        </p>
       ) : null}
       {len > 1 ? (
         <>
@@ -213,6 +245,41 @@ function Card3GifVisual({ src, fallbackGradient }) {
   );
 }
 
+function Card5SplitVisual({ src, fallbackGradient }) {
+  const [failed, setFailed] = useState(false);
+
+  return (
+    <div
+      className="skiper16-visual skiper16-visual--split-card5"
+      style={{ background: fallbackGradient }}
+    >
+      <div className="skiper16-card5-copy">
+        <p className="skiper16-card5-placeholder-label">Handoff</p>
+        <p className="skiper16-card5-placeholder-lead">
+          Masters, cuts, and specs—organized for whoever needs them next.
+        </p>
+        <p className="skiper16-card5-placeholder-body">
+          Social, web, broadcast, or cinema: you get the right files, naming, and notes so
+          nothing gets lost on the way out the door.
+        </p>
+      </div>
+      <div className="skiper16-card5-media">
+        {!failed ? (
+          <img
+            className="skiper16-card5-img"
+            src={src}
+            alt=""
+            decoding="async"
+            loading="lazy"
+            draggable={false}
+            onError={() => setFailed(true)}
+          />
+        ) : null}
+      </div>
+    </div>
+  );
+}
+
 function StickyCard({ i, n, title, kicker, gradient, scrollYProgress }) {
   const scale = useTransform(scrollYProgress, p => {
     const t = scrollProgressToMotionT(p, n);
@@ -234,7 +301,7 @@ function StickyCard({ i, n, title, kicker, gradient, scrollYProgress }) {
         top: `calc(${i} * var(--skiper16-peek))`,
       }}
     >
-      <motion.div className="skiper16-card" style={{ scale }}>
+      <Motion.div className="skiper16-card" style={{ scale }}>
         {i === 0 ? (
           <Card1GalleryVisual frames={CARD1_GALLERY_FRAMES} fallbackGradient={gradient} />
         ) : i === 1 ? (
@@ -246,9 +313,9 @@ function StickyCard({ i, n, title, kicker, gradient, scrollYProgress }) {
             <VideoPlayer src={CARD4_VIDEO_SRC} />
           </div>
         ) : (
-          <div className="skiper16-visual" style={{ background: gradient }} />
+          <Card5SplitVisual src={CARD5_FRAME_SRC} fallbackGradient={gradient} />
         )}
-        <motion.div
+        <Motion.div
           className="skiper16-card-darken"
           style={{ opacity: darkenOpacity }}
           aria-hidden
@@ -260,7 +327,7 @@ function StickyCard({ i, n, title, kicker, gradient, scrollYProgress }) {
           <span className="skiper16-kicker">{kicker}</span>
           <h3 className="skiper16-title">{title}</h3>
         </div>
-      </motion.div>
+      </Motion.div>
     </div>
   );
 }

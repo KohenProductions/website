@@ -1,8 +1,7 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useReducedMotion } from 'motion/react';
 import BorderGlow from '../BorderGlow/BorderGlow';
 import VideoPlayer from '../VideoPlayer/VideoPlayer';
-import GalleryDrawingTrail from './GalleryDrawingTrail';
 import './HoverExpandGallery.css';
 
 /**
@@ -25,20 +24,7 @@ const DEFAULT_ITEMS = [
 
 export default function HoverExpandGallery({ items = DEFAULT_ITEMS }) {
   const reduceMotion = useReducedMotion();
-  const sectionRef = useRef(null);
-  const [finePointer, setFinePointer] = useState(
-    () => typeof window !== 'undefined' && window.matchMedia('(pointer: fine)').matches,
-  );
   const [active, setActive] = useState(0);
-
-  useEffect(() => {
-    const mq = window.matchMedia('(pointer: fine)');
-    const onChange = () => setFinePointer(mq.matches);
-    mq.addEventListener('change', onChange);
-    return () => mq.removeEventListener('change', onChange);
-  }, []);
-
-  const drawingEnabled = finePointer && !reduceMotion;
 
   const activate = useCallback(i => {
     setActive(i);
@@ -57,13 +43,12 @@ export default function HoverExpandGallery({ items = DEFAULT_ITEMS }) {
   const rootClass = [
     'hover-expand-gallery',
     reduceMotion ? 'hover-expand-gallery--reduce-motion' : '',
-    drawingEnabled ? 'hover-expand-gallery--drawing-cursor' : '',
   ]
     .filter(Boolean)
     .join(' ');
 
   return (
-    <section ref={sectionRef} className={rootClass} aria-labelledby="hover-expand-heading">
+    <section className={rootClass} aria-labelledby="hover-expand-heading">
       <header className="hover-expand-head">
         <span className="hover-expand-label hover-expand-label--tagline">
           the next step of content creation
@@ -118,18 +103,7 @@ export default function HoverExpandGallery({ items = DEFAULT_ITEMS }) {
         <a href="https://skiper-ui.com/v1/skiper52" target="_blank" rel="noreferrer">
           Skiper UI — ExpandOnHover
         </a>
-        {' · '}
-        Drawing trail inspired by{' '}
-        <a href="https://skiper-ui.com/v1/skiper59" target="_blank" rel="noreferrer">
-          Skiper UI — Drawing cursor
-        </a>
-        {' / '}
-        <a href="https://www.artlebedev.com/" target="_blank" rel="noreferrer">
-          Artemiy Lebedev
-        </a>
       </p>
-
-      <GalleryDrawingTrail sectionRef={sectionRef} enabled={drawingEnabled} />
     </section>
   );
 }
