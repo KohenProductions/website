@@ -1,0 +1,301 @@
+.fashion-opening-title {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: clamp(1.45rem, 2.5vw, 2.15rem);
+  font-weight: 320;
+  line-height: 1.25;
+  letter-spacing: 0.045em;
+  color: rgba(13, 13, 13, 0.72);
+  margin-top: 0.35rem;
+  margin-bottom: 1.45rem;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 28ch;
+  text-align: center;
+}
+
+.fashion-divider-strip {
+  position: relative;
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  margin-top: -1.25rem;
+  margin-bottom: 2.25rem;
+  z-index: 1;
+}
+
+.fashion-divider-video {
+  width: 100%;
+  height: clamp(130px, 22vw, 290px);
+  object-fit: cover;
+  display: block;
+}
+
+.fashion-hero-caption {
+  margin-top: 0.85rem;
+  font-size: 0.86rem;
+  line-height: 1.45;
+  letter-spacing: 0.01em;
+  opacity: 0.62;
+}
+
+.fashion-project-flow {
+  padding: 0 0 8rem;
+}
+
+.fashion-project-block {
+  width: 100%;
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 0 0 6.5rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  box-sizing: border-box;
+}
+
+.fashion-project-video-wrap {
+  width: min(94vw, 50rem);
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 0;
+}
+
+.fashion-project-caption {
+  width: min(94vw, 50rem);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.fashion-project-block--first {
+  padding-bottom: 7.25rem;
+}
+
+.fashion-project-video-wrap--first {
+  width: clamp(18.25rem, 26vw, 21.1rem); /* ~520px–600px tall at 9:16 */
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.fashion-project-video--vertical {
+  aspect-ratio: 9 / 16;
+  max-width: none;
+}
+
+.fashion-project-caption--first {
+  width: 100%;
+  text-align: center;
+  margin-top: 1rem;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.fashion-project-first-campaign {
+  display: grid;
+  grid-template-columns: auto auto;
+  justify-content: center;
+  align-items: center;
+  gap: clamp(2.5rem, 4vw, 3.5rem);
+  width: 100%;
+  min-width: 0;
+}
+
+.fashion-project-first-videoCol,
+.fashion-project-first-viewerCol {
+  min-width: 0;
+}
+
+.fashion-project-first-videoCol {
+  justify-self: center;
+}
+
+.fashion-project-first-viewerCol {
+  justify-self: center;
+}
+
+.fashion-project-first-viewer {
+  position: relative;
+  width: clamp(12.8rem, 20vw, 16.9rem); /* ~70–80% of video height */
+  max-width: none;
+  margin: 0;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #0d0d0d;
+  aspect-ratio: 9 / 16;
+}
+
+.fashion-project-first-viewerImageBtn {
+  width: 100%;
+  height: 100%;
+  border: none;
+  background: transparent;
+  margin: 0;
+  padding: 0;
+  cursor: pointer;
+  display: block;
+}
+
+.fashion-project-first-viewerImage {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  animation: fashionFadeIn 240ms ease;
+}
+
+@keyframes fashionFadeIn {
+  from { opacity: 0.4; }
+  to { opacity: 1; }
+}
+
+.fashion-project-gallery-shell {
+  position: relative;
+  margin-top: 1rem;
+}
+
+.fashion-project-gallery-track {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding: 0.15rem 2.35rem;
+  align-items: center;
+}
+
+.fashion-project-gallery-track::-webkit-scrollbar {
+  display: none;
+}
+
+.fashion-project-gallery-card {
+  --gallery-image-height: clamp(17rem, 34vw, 26rem);
+  margin: 0;
+  flex: 0 0 auto;
+  height: var(--gallery-image-height);
+  width: calc(var(--img-ratio, 1.25) * var(--gallery-image-height));
+  max-width: min(78vw, 42rem);
+  border-radius: 10px;
+  overflow: hidden;
+  background: #0d0d0d;
+  scroll-snap-align: start;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fashion-project-gallery-card:not(.is-loaded) {
+  opacity: 0.75;
+}
+
+.fashion-project-gallery-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  transition: transform 0.35s ease;
+}
+
+.fashion-project-gallery-imageBtn {
+  width: 100%;
+  height: 100%;
+  border: none;
+  background: transparent;
+  padding: 0;
+  margin: 0;
+  display: block;
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.fashion-project-gallery-imageBtn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.06) 0%, rgba(0, 0, 0, 0.2) 100%);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.fashion-project-gallery-imageBtn:hover img {
+  transform: scale(1.045);
+}
+
+.fashion-project-gallery-imageBtn:hover::after {
+  opacity: 1;
+}
+
+.fashion-project-gallery-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 32px;
+  height: 32px;
+  border-radius: 9999px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  background: rgba(255, 255, 255, 0.72);
+  color: rgba(0, 0, 0, 0.68);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.fashion-project-gallery-arrow:hover {
+  background: rgba(255, 255, 255, 0.88);
+  transform: translateY(-50%) scale(1.03);
+}
+
+.fashion-project-gallery-arrow--left {
+  left: 0.6rem;
+}
+
+.fashion-project-gallery-arrow--right {
+  right: 0.6rem;
+}
+
+@media (max-width: 60rem) {
+  .fashion-project-first-campaign {
+    grid-template-columns: 1fr;
+    gap: 1.2rem;
+  }
+
+  .fashion-project-first-videoCol {
+    max-width: min(62vw, 24rem);
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .fashion-project-first-viewer {
+    width: min(52vw, 14rem);
+  }
+}
+
+@media (max-width: 48rem) {
+  .fashion-project-block {
+    padding-bottom: 5rem;
+  }
+
+  .fashion-project-block--first {
+    padding-bottom: 5.5rem;
+  }
+
+  .fashion-project-gallery-track {
+    padding: 0.15rem 2.1rem;
+  }
+
+  .fashion-project-gallery-card {
+    --gallery-image-height: clamp(13rem, 62vw, 19rem);
+    max-width: 88vw;
+  }
+
+  .fashion-project-first-videoCol {
+    max-width: min(82vw, 20rem);
+  }
+
+  .fashion-project-first-viewer {
+    width: min(72vw, 12rem);
+    aspect-ratio: 9 / 16;
+  }
+
+}
+

@@ -10,6 +10,7 @@ import Magnet from './components/Magnet/Magnet';
 import HoverExpandShowcase, { FASHION_HOVER_EXPAND_ITEMS } from './components/HoverExpandShowcase/HoverExpandShowcase';
 import Aurora from './components/Aurora/Aurora';
 import './App.css';
+import FashionPage from './pages/FashionPage';
 
 const projects = [
   { id: 1, title: 'Karl Studio',   category: 'Brand Film',      ratio: '16:9', year: '2026', client: 'Karl Studio', clientDesc: 'Menswear boutique · TLV & Jerusalem' },
@@ -37,6 +38,15 @@ function Placeholder({ ratio, index }) {
 export default function App() {
   const heroRef = useRef(null);
 
+  const isFashionPage = (() => {
+    if (typeof window === 'undefined') return false;
+    const pathname = window.location.pathname || '/';
+    // Works even when the app is hosted under a subpath (non-root BASE_URL).
+    return pathname.replace(/\/$/, '') === '/fashion' || pathname.replace(/\/$/, '').endsWith('/fashion');
+  })();
+
+  if (isFashionPage) return <FashionPage />;
+
   return (
     <div className="app">
 
@@ -56,9 +66,13 @@ export default function App() {
             <a href="#" className="nav-logo">Ron<span>.</span>Kohen</a>
             <ul className="nav-links">
               <li><a href="#work">Work</a></li>
+              <li><a href="/fashion">Fashion</a></li>
               <li><a href="#about">About</a></li>
               <li><a href="#contact">Contact</a></li>
             </ul>
+            <a href="/ai" className="nav-ai-badge" aria-label="AI category">
+              AI
+            </a>
             <div className="nav-actions">
               <Magnet padding={96} magnetStrength={2.5} wrapperClassName="nav-magnet">
                 <a href="#contact" className="nav-btn nav-btn--primary">
