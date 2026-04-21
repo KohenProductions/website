@@ -1,11 +1,7 @@
 {
   "rewrites": [
     {
-      "source": "/fashion",
-      "destination": "/"
-    },
-    {
-      "source": "/fashion/:path*",
+      "source": "/(.*)",
       "destination": "/"
     }
   ],
@@ -49,4 +45,3 @@
     }
   ]
 }
-
