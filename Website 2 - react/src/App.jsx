@@ -11,6 +11,7 @@ import HoverExpandShowcase, { FASHION_HOVER_EXPAND_ITEMS } from './components/Ho
 import Aurora from './components/Aurora/Aurora';
 import './App.css';
 import FashionPage from './pages/FashionPage';
+import AiPage from './pages/AiPage';
 
 const projects = [
   { id: 1, title: 'Karl Studio',   category: 'Brand Film',      ratio: '16:9', year: '2026', client: 'Karl Studio', clientDesc: 'Menswear boutique · TLV & Jerusalem' },
@@ -38,14 +39,14 @@ function Placeholder({ ratio, index }) {
 export default function App() {
   const heroRef = useRef(null);
 
-  const isFashionPage = (() => {
-    if (typeof window === 'undefined') return false;
-    const pathname = window.location.pathname || '/';
-    // Works even when the app is hosted under a subpath (non-root BASE_URL).
-    return pathname.replace(/\/$/, '') === '/fashion' || pathname.replace(/\/$/, '').endsWith('/fashion');
-  })();
+  const pathnameNorm = typeof window === 'undefined' ? '/' : (window.location.pathname || '/').replace(/\/$/, '') || '/';
+
+  const isFashionPage =
+    pathnameNorm === '/fashion' || pathnameNorm.endsWith('/fashion');
+  const isAiPage = pathnameNorm === '/ai' || pathnameNorm.endsWith('/ai');
 
   if (isFashionPage) return <FashionPage />;
+  if (isAiPage) return <AiPage />;
 
   return (
     <div className="app">
