@@ -66,14 +66,7 @@ export default function AiPage() {
             </BorderGlow>
           </div>
           <div className="project-feature-desc ai-page-hero-desc">
-            <p>
-              A cinematic AI-driven sequence set in a grand stone estate, blending elegant choreography with
-              controlled camera movement and refined visual storytelling.
-            </p>
-            <p>
-              Built through precise prompting and iteration, the project captures a seamless fusion of atmosphere,
-              motion, and high-end cinematic aesthetics.
-            </p>
+            <p>A Cinematic AI Experience — Where Movement, Atmosphere, and Story Become One.</p>
           </div>
         </div>
       </section>

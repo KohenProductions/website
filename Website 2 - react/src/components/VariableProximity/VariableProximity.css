@@ -2,6 +2,11 @@
   cursor: default;
 }
 
+.variable-proximity .line {
+  display: block;
+  white-space: nowrap;
+}
+
 .vp-word {
   transition: color 0.3s ease, text-shadow 0.3s ease;
 }

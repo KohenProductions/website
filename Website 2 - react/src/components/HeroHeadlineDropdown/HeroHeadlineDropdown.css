@@ -1,0 +1,135 @@
+.hero-dd {
+  position: relative;
+  display: inline-block;
+  white-space: nowrap;
+  vertical-align: baseline;
+}
+
+.hero-dd::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  width: 13rem;
+  height: 0.7rem;
+  transform: translateX(-50%);
+}
+
+.hero-dd-caret {
+  display: inline-block;
+  margin-left: 0.06em;
+  font-size: 0.72em;
+  opacity: 0.55;
+  color: var(--text-h);
+  animation: hero-dd-caret-breathe 2.4s ease-in-out infinite;
+  transform-origin: 50% 55%;
+}
+
+@keyframes hero-dd-caret-breathe {
+  0%,
+  100% {
+    opacity: 0.45;
+    transform: translateY(0);
+  }
+  50% {
+    opacity: 0.85;
+    transform: translateY(2px);
+  }
+}
+
+.hero-dd-menu {
+  position: absolute;
+  left: 50%;
+  top: calc(100% - 0.08rem);
+  z-index: 120;
+  min-width: 11.5rem;
+  margin: 0;
+  padding: 0.35rem;
+  list-style: none;
+  text-align: left;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow:
+    0 12px 32px rgba(0, 0, 0, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(-50%, 6px);
+  pointer-events: none;
+  transition:
+    opacity 0.22s ease,
+    transform 0.22s ease,
+    visibility 0.22s ease;
+}
+
+.hero-dd:hover .hero-dd-menu,
+.hero-dd:focus-within .hero-dd-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, 0);
+  pointer-events: auto;
+}
+
+.hero-dd:hover .hero-dd-caret,
+.hero-dd:focus-within .hero-dd-caret {
+  opacity: 0.95;
+  animation: none;
+}
+
+.hero-dd-menu li {
+  margin: 0;
+  padding: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.hero-dd-menu li:last-child {
+  border-bottom: 0;
+}
+
+.hero-dd-item {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px 18px;
+  border-radius: 10px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  text-align: left;
+  text-decoration: none;
+  color: var(--text);
+  transition: all 0.2s ease;
+}
+
+.hero-dd-item:hover,
+.hero-dd-item:focus-visible {
+  outline: none;
+  color: var(--text-h);
+  background: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 0 18px rgba(255, 255, 255, 0.06);
+  transform: translateX(4px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-dd-caret {
+    animation: none;
+    opacity: 0.65;
+  }
+
+  .hero-dd-menu {
+    transition-duration: 0.12s;
+  }
+
+  .hero-dd-item {
+    transition-duration: 0.15s;
+  }
+
+  .hero-dd-item:hover,
+  .hero-dd-item:focus-visible {
+    transform: none;
+  }
+}
+

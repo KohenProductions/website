@@ -1,5 +1,6 @@
-import { forwardRef, useMemo, useRef, useEffect } from 'react';
+import { forwardRef, Fragment, useMemo, useRef, useEffect } from 'react';
 import { motion } from 'motion/react';
+import { HeroHeadlineDropdownTrigger } from '../HeroHeadlineDropdown/HeroHeadlineDropdown';
 import './VariableProximity.css';
 
 function useAnimationFrame(callback) {
@@ -37,6 +38,8 @@ function useMousePositionRef(containerRef) {
 const VariableProximity = forwardRef((props, ref) => {
   const {
     label,
+    lines: linesProp,
+    headlineDropdown,
     fromFontVariationSettings,
     toFontVariationSettings,
     containerRef,
@@ -101,7 +104,9 @@ const VariableProximity = forwardRef((props, ref) => {
     });
   });
 
-  const words = label.split(' ');
+  const lineStrings =
+    linesProp != null && linesProp.length > 0 ? linesProp : [label];
+  const srText = label ?? linesProp?.join(' ') ?? '';
   let letterIndex = 0;
 
   return (
@@ -112,25 +117,50 @@ const VariableProximity = forwardRef((props, ref) => {
       style={{ display: 'inline', ...style }}
       {...restProps}
     >
-      {words.map((word, wi) => (
-        <span key={wi} className={word.toLowerCase() === 'right' ? 'vp-word vp-word--highlight' : 'vp-word'} style={{ display: 'inline-block', whiteSpace: 'nowrap' }}>
-          {word.split('').map(letter => {
-            const idx = letterIndex++;
-            return (
-              <motion.span
-                key={idx}
-                ref={el => { letterRefs.current[idx] = el; }}
-                style={{ display: 'inline-block', fontVariationSettings: interpolatedSettingsRef.current[idx] }}
-                aria-hidden="true"
-              >
-                {letter}
-              </motion.span>
-            );
-          })}
-          {wi < words.length - 1 && <span style={{ display: 'inline-block' }}>&nbsp;</span>}
-        </span>
-      ))}
-      <span className="sr-only">{label}</span>
+      {lineStrings.map((line, li) => {
+        const words = line.split(/\s+/).filter(Boolean);
+        return (
+          <span key={li} className="line">
+            {words.map((word, wi) => {
+              const wordClass =
+                word.toLowerCase() === 'video' ? 'vp-word vp-word--highlight' : 'vp-word';
+              const letters = word.split('').map(letter => {
+                const idx = letterIndex++;
+                return (
+                  <motion.span
+                    key={idx}
+                    ref={el => { letterRefs.current[idx] = el; }}
+                    style={{ display: 'inline-block', fontVariationSettings: interpolatedSettingsRef.current[idx] }}
+                    aria-hidden="true"
+                  >
+                    {letter}
+                  </motion.span>
+                );
+              });
+              const wordSpan = (
+                <span className={wordClass} style={{ display: 'inline-block', whiteSpace: 'nowrap' }}>
+                  {letters}
+                </span>
+              );
+              const withDropdown =
+                headlineDropdown && word === headlineDropdown.word ? (
+                  <HeroHeadlineDropdownTrigger items={headlineDropdown.items}>
+                    {wordSpan}
+                  </HeroHeadlineDropdownTrigger>
+                ) : (
+                  wordSpan
+                );
+              return (
+                <Fragment key={wi}>
+                  {withDropdown}
+                  {wi < words.length - 1 && <span style={{ display: 'inline-block' }}>&nbsp;</span>}
+                </Fragment>
+              );
+            })}
+          </span>
+        );
+      })}
+      <span className="sr-only">{srText}</span>
     </span>
   );
 });

@@ -13,6 +13,15 @@ import './App.css';
 import FashionPage from './pages/FashionPage';
 import AiPage from './pages/AiPage';
 
+const HERO_HEADLINE_DROPDOWN = {
+  word: 'want?',
+  items: [
+    { label: 'Commercial / Brand', href: '/#work' },
+    { label: 'Fashion', href: '/fashion' },
+    { label: 'AI', href: '/ai' },
+  ],
+};
+
 const projects = [
   { id: 1, title: 'Karl Studio',   category: 'Brand Film',      ratio: '16:9', year: '2026', client: 'Karl Studio', clientDesc: 'Menswear boutique · TLV & Jerusalem' },
   { id: 2, title: 'Bettercare',    category: 'Social Content',  ratio: '9:16', year: '2024', clientDesc: 'Health & wellness app · Israel' },
@@ -91,7 +100,9 @@ export default function App() {
           <p className="hero-sub">AI commercials · Brand films · Social content</p>
           <h1 className="hero-title">
             <VariableProximity
-              label="creating the right video content for you"
+              lines={['What kind of video', 'do you want?']}
+              label="What kind of video do you want?"
+              headlineDropdown={HERO_HEADLINE_DROPDOWN}
               containerRef={heroRef}
               fromFontVariationSettings="'wght' 200"
               toFontVariationSettings="'wght' 900"
